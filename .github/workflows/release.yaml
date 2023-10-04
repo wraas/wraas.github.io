@@ -1,0 +1,16 @@
+name: Release that
+on: [push]
+jobs:
+  release-that:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+
+      - name: Release That
+        uses: rlespinasse/release-that@v1
