@@ -1,0 +1,102 @@
+name: Check robots.txt
+
+on:
+  pull_request:
+    paths:
+      - 'robots.txt'
+
+jobs:
+  check-robots-txt:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate robots.txt
+        run: |
+          errors=""
+
+          # Check file exists
+          if [ ! -f robots.txt ]; then
+            echo "robots.txt not found"
+            echo "ERRORS=- robots.txt file is missing" >> "$GITHUB_ENV"
+            exit 1
+          fi
+
+          # Check for valid directives (ignore comments and blank lines)
+          current_agent=""
+          line_num=0
+          while IFS= read -r line || [ -n "$line" ]; do
+            line_num=$((line_num + 1))
+
+            # Skip empty lines and comments
+            stripped=$(echo "$line" | sed 's/^[[:space:]]*//')
+            if [ -z "$stripped" ] || echo "$stripped" | grep -q '^#'; then
+              continue
+            fi
+
+            # Extract directive name (case-insensitive)
+            directive=$(echo "$stripped" | cut -d: -f1 | tr '[:upper:]' '[:lower:]' | sed 's/[[:space:]]*$//')
+
+            case "$directive" in
+              user-agent)
+                current_agent=$(echo "$stripped" | cut -d: -f2- | sed 's/^[[:space:]]*//')
+                if [ -z "$current_agent" ]; then
+                  errors="${errors}- Line ${line_num}: \`User-agent\` has no value\n"
+                fi
+                ;;
+              allow|disallow)
+                if [ -z "$current_agent" ]; then
+                  errors="${errors}- Line ${line_num}: \`${directive}\` without a preceding \`User-agent\`\n"
+                fi
+                ;;
+              sitemap)
+                url=$(echo "$stripped" | cut -d: -f2- | sed 's/^[[:space:]]*//')
+                if ! echo "$url" | grep -qE '^https?://'; then
+                  errors="${errors}- Line ${line_num}: \`Sitemap\` value is not a valid URL: \`${url}\`\n"
+                fi
+                ;;
+              crawl-delay|host)
+                # Known optional directives
+                ;;
+              *)
+                errors="${errors}- Line ${line_num}: Unknown directive \`${directive}\`\n"
+                ;;
+            esac
+          done < robots.txt
+
+          # Check for catch-all user-agent rule
+          if ! grep -qi '^User-agent:[[:space:]]*\*' robots.txt; then
+            errors="${errors}- Missing catch-all \`User-agent: *\` rule\n"
+          fi
+
+          if [ -n "$errors" ]; then
+            echo "ERRORS<<EOF" >> "$GITHUB_ENV"
+            echo -e "$errors" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+            echo -e "Validation errors:\n$errors"
+            exit 1
+          fi
+
+          echo "robots.txt is valid"
+
+      - name: Comment on pull request
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `## Invalid robots.txt
+
+            The following issue(s) were found in \`robots.txt\`:
+
+            ${process.env.ERRORS}
+
+            Please fix the file before merging.`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body
+            });
