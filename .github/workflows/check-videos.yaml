@@ -26,10 +26,15 @@ jobs:
           failed=""
           while IFS= read -r url; do
             file=$(grep -rl "$url" *.html)
-            status=$(curl -s -o /dev/null -w "%{http_code}" "https://www.youtube.com/oembed?url=${url}&format=json")
-            echo "Checking $url (found in $file) -> HTTP $status"
-            if [ "$status" != "200" ]; then
-              failed="${failed}- \`${url}\` in \`${file}\` (HTTP ${status})\n"
+            # Check oEmbed API for removed/private videos
+            oembed_status=$(curl -s -o /dev/null -w "%{http_code}" "https://www.youtube.com/oembed?url=${url}&format=json")
+            # Check playability status for blocked/unavailable videos (copyright, region-lock, etc.)
+            playability=$(curl -s "https://www.youtube.com/watch?v=$(echo "$url" | grep -o 'v=[^&]*' | cut -d= -f2)" | grep -o '"playabilityStatus":{[^}]*}' | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+            echo "Checking $url (found in $file) -> HTTP $oembed_status, playability: $playability"
+            if [ "$oembed_status" != "200" ]; then
+              failed="${failed}- \`${url}\` in \`${file}\` — removed or private (HTTP ${oembed_status})\n"
+            elif [ "$playability" != "OK" ]; then
+              failed="${failed}- \`${url}\` in \`${file}\` — ${playability:-UNKNOWN}\n"
             fi
           done <<< "$urls"
 
