@@ -5,14 +5,19 @@ $(document).ready(function() {
         || navigator.userAgent.indexOf('VoiceOver') !== -1;
 
     if (isScreenReader) {
-        $(".bg_load").hide();
-        $(".wrapper").hide();
+        $(".lyrics-line").addClass("visible");
     } else {
-        $(".lyrics").hide();
-        $(".bg_load").fadeOut("slow");
-        $(".wrapper").fadeOut("slow");
+        var lines = $(".lyrics-line");
+        var delay = 600;
+
+        lines.each(function(i) {
+            setTimeout(function() {
+                lines.eq(i).addClass("visible");
+            }, i * delay);
+        });
+
         setTimeout(function() {
             window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-        }, 1000);
+        }, lines.length * delay + 1000);
     }
 })
