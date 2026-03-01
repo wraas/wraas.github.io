@@ -1,0 +1,62 @@
+name: Check YouTube Videos
+
+on:
+  push:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+jobs:
+  check-videos:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract and check YouTube URLs
+        run: |
+          urls=$(grep -roh 'https://www.youtube.com/watch?v=[^"'"'"' ]*' *.html || true)
+
+          if [ -z "$urls" ]; then
+            echo "No YouTube URLs found"
+            exit 0
+          fi
+
+          failed=""
+          while IFS= read -r url; do
+            file=$(grep -rl "$url" *.html)
+            status=$(curl -s -o /dev/null -w "%{http_code}" "https://www.youtube.com/oembed?url=${url}&format=json")
+            echo "Checking $url (found in $file) -> HTTP $status"
+            if [ "$status" != "200" ]; then
+              failed="${failed}- \`${url}\` in \`${file}\` (HTTP ${status})\n"
+            fi
+          done <<< "$urls"
+
+          if [ -n "$failed" ]; then
+            echo "FAILED_URLS<<EOF" >> "$GITHUB_ENV"
+            echo -e "$failed" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+            exit 1
+          fi
+
+      - name: Open issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `## Broken YouTube Video Detected
+
+            The following YouTube video(s) appear to be unavailable:
+
+            ${process.env.FAILED_URLS}
+
+            Please verify and update the video URL(s).`;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Broken YouTube video detected',
+              body: body,
+              labels: ['bug']
+            });
