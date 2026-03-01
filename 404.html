@@ -1,25 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>W.R.A.A.S.</title>
-   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-   <link href="//wraas.github.io/style.css" rel="stylesheet" id="bootstrap-css">
-   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-   <script src="//wraas.github.io/script.js"></script>
-   <meta http-equiv="refresh" content="1; url = https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
+   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+   <link href="style.css" rel="stylesheet" id="custom-css">
+   <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+   <script src="script.js"></script>
 </head>
 
 <body>
-   <div class="container">
-      <!-- Want to now how it's work, read the usage guide -->
+   <main class="container">
+      <!-- Want to know how it works, read the usage guide -->
       <!-- https://wraas.github.io/usage-guide -->
-   </div>
+      <!-- Lyrics source: https://www.lyricsondemand.com/r/rickastleylyrics/nevergonnagiveyouuplyrics.html -->
+      <div class="lyrics">
+         <p>
+            Never gonna give you up<br>
+            Never gonna let you down<br>
+            Never gonna run around and desert you<br>
+            Never gonna make you cry<br>
+            Never gonna say goodbye<br>
+            Never gonna tell a lie and hurt you
+         </p>
+      </div>
+   </main>
 
-   <div class="bg_load"></div>
-   <div class="wrapper">
-      <div class="inner">
+   <div class="bg_load" aria-hidden="true"></div>
+   <div class="wrapper" role="status" aria-label="Loading, please wait">
+      <div class="inner" aria-hidden="true">
          <span>L</span>
          <span>o</span>
          <span>a</span>
@@ -29,6 +41,14 @@
          <span>g</span>
       </div>
    </div>
+   <noscript>
+      <style>
+         .bg_load,
+         .wrapper {
+            display: none;
+         }
+      </style>
+   </noscript>
 </body>
 
 </html>

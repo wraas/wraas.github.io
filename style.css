@@ -113,3 +113,24 @@ body {
 @keyframes loading-7 {
     100% { opacity: 0.3; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .wrapper,
+    .wrapper .inner,
+    .wrapper span {
+        animation: none;
+    }
+}
+
+.lyrics {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Racing Sans One', sans-serif;
+    font-size: 1.5em;
+    color: #444;
+    text-align: center;
+    line-height: 1.8;
+    z-index: 1;
+}
