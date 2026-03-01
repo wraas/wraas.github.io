@@ -1,8 +1,26 @@
 @import url(https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700);
 
 body {
-    background: #EEE;
+    background: #000;
     margin: 0;
+    overflow: hidden;
+}
+
+.rick-bg {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.rick-bg.visible {
+    opacity: 1;
 }
 
 .lyrics {
@@ -16,12 +34,12 @@ body {
     font-style: italic;
     font-weight: 700;
     font-size: clamp(1.2em, 4vw, 2.5em);
-    color: #333;
+    color: #fff;
     text-align: center;
     line-height: 1.4;
     z-index: 1;
     letter-spacing: 0.02em;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
     padding: 0 1em;
 }
 

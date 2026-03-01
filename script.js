@@ -7,6 +7,8 @@ $(document).ready(function() {
     if (isScreenReader) {
         $(".lyrics-line").addClass("visible");
     } else {
+        $(".rick-bg").addClass("visible");
+
         var lines = $(".lyrics-line");
         var delay = 600;
 
@@ -17,7 +19,7 @@ $(document).ready(function() {
         });
 
         setTimeout(function() {
-            window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+            window.location.href = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0';
         }, lines.length * delay + 1000);
     }
 })
