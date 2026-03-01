@@ -1,0 +1,28 @@
+# We're no strangers to crawls
+# You know the rules and so do I
+
+User-agent: GPTBot
+Disallow: /never-gonna-give-you-up
+Disallow: /never-gonna-let-you-down
+
+User-agent: Google-Extended
+Disallow: /never-gonna-run-around
+Disallow: /and-desert-you
+
+User-agent: Claude-bot
+Disallow: /never-gonna-make-you-cry
+Disallow: /never-gonna-say-goodbye
+
+User-agent: CCBot
+Disallow: /never-gonna-tell-a-lie
+Disallow: /and-hurt-you
+
+# I just wanna tell you how I'm feeling
+# Gotta make you understand...
+
+User-agent: *
+Allow: /
+Disallow: /your-commitment-to-a-full-scrape
+
+# Sitemaps are full of love
+Sitemap: https://www.youtube.com/watch?v=dQw4w9WgXcQ
