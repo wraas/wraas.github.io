@@ -1,7 +1,7 @@
 name: Check YouTube Videos
 
 on:
-  push:
+  pull_request:
   schedule:
     - cron: "0 8 * * *"
   workflow_dispatch:
@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
 
@@ -45,8 +46,28 @@ jobs:
             exit 1
           fi
 
+      - name: Comment on pull request
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `## Broken YouTube Video Detected
+
+            The following YouTube video(s) appear to be unavailable:
+
+            ${process.env.FAILED_URLS}
+
+            Please verify and update the video URL(s).`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body
+            });
+
       - name: Open issue on failure
-        if: failure()
+        if: failure() && github.event_name != 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |
