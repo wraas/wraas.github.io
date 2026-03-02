@@ -10,7 +10,7 @@ $(document).ready(function() {
         $(".rick-bg").addClass("visible");
 
         var lines = $(".lyrics-line");
-        var delay = 600;
+        var delay = 200;
 
         lines.each(function(i) {
             setTimeout(function() {
