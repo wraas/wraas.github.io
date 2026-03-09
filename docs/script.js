@@ -23,4 +23,14 @@ $(document).ready(function() {
             $(".mute-btn").addClass("visible");
         }, lines.length * delay);
     }
+
+    $(".mute-btn").on("click", function() {
+        if (typeof goatcounter !== "undefined" && goatcounter.count) {
+            goatcounter.count({
+                path: "mute-btn-click",
+                title: "Mute button click",
+                event: true
+            });
+        }
+    });
 })
