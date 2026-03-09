@@ -57,15 +57,16 @@ body {
 
 .mute-btn {
     position: fixed;
-    bottom: 1.5em;
-    right: 1.5em;
+    top: 1em;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 2;
     color: #fff;
     background: rgba(255, 255, 255, 0.15);
     border: none;
     border-radius: 50%;
-    width: 3em;
-    height: 3em;
+    width: 5em;
+    height: 5em;
     display: flex;
     align-items: center;
     justify-content: center;
