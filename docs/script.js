@@ -6,6 +6,7 @@ $(document).ready(function() {
 
     if (isScreenReader) {
         $(".lyrics-line").addClass("visible");
+        $(".mute-btn").addClass("visible");
     } else {
         $(".rick-bg").addClass("visible");
 
@@ -18,6 +19,8 @@ $(document).ready(function() {
             }, i * delay);
         });
 
-
+        setTimeout(function() {
+            $(".mute-btn").addClass("visible");
+        }, lines.length * delay);
     }
 })
