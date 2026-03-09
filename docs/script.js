@@ -18,8 +18,6 @@ $(document).ready(function() {
             }, i * delay);
         });
 
-        setTimeout(function() {
-            window.location.href = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0&start=43';
-        }, lines.length * delay + 1000);
+
     }
 })
