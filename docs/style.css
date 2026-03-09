@@ -55,6 +55,37 @@ body {
     transform: translateY(0);
 }
 
+.mute-btn {
+    position: fixed;
+    bottom: 1.5em;
+    right: 1.5em;
+    z-index: 2;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 50%;
+    width: 3em;
+    height: 3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.6s ease, background 0.3s ease;
+}
+
+.mute-btn.visible {
+    opacity: 1;
+}
+
+.mute-btn:hover,
+.mute-btn:focus {
+    background: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    text-decoration: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .lyrics-line {
         opacity: 1;
