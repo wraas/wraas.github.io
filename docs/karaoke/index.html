@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>W.R.A.A.S. Karaoke</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎤</text></svg>">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ---- Song Selection Screen ---- */
+        .song-select {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2em 1em 4em;
+            transition: opacity 0.5s ease;
+        }
+
+        .song-select.hidden {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+        }
+
+        .logo {
+            font-size: clamp(1.5em, 4vw, 2.2em);
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.1em;
+            letter-spacing: -0.02em;
+        }
+
+        .tagline {
+            color: #888;
+            margin-bottom: 0.8em;
+            font-size: 1em;
+        }
+
+        .search-wrap {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            margin-bottom: 2em;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 0.8em 1em 0.8em 2.8em;
+            background: #161616;
+            border: 1px solid #333;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-bar:focus { border-color: #1a73e8; }
+
+        .search-icon {
+            position: absolute;
+            left: 0.9em;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            pointer-events: none;
+        }
+
+        .song-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1em;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .song-card {
+            background: #161616;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 1.2em 1.4em;
+            cursor: pointer;
+            transition: border-color 0.2s, transform 0.15s, background 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .song-card:hover, .song-card:focus {
+            border-color: #4ade80;
+            transform: translateY(-2px);
+            background: #1a1a1a;
+            outline: none;
+        }
+
+        .song-title {
+            font-weight: 700;
+            color: #fff;
+            font-size: 1.05em;
+            margin-bottom: 0.2em;
+        }
+
+        .song-artist {
+            color: #888;
+            font-size: 0.85em;
+            margin-bottom: 0.6em;
+        }
+
+        .song-meta {
+            display: flex;
+            gap: 0.6em;
+            align-items: center;
+        }
+
+        .song-tag {
+            font-size: 0.7em;
+            padding: 0.2em 0.6em;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, 0.06);
+            color: #666;
+        }
+
+        .song-tag.difficulty-easy { color: #4ade80; background: rgba(74, 222, 128, 0.1); }
+        .song-tag.difficulty-medium { color: #facc15; background: rgba(250, 204, 21, 0.1); }
+        .song-tag.difficulty-hard { color: #f87171; background: rgba(248, 113, 113, 0.1); }
+
+        .sing-label {
+            position: absolute;
+            right: 1em;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4ade80;
+            font-size: 0.8em;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .song-card:hover .sing-label,
+        .song-card:focus .sing-label { opacity: 1; }
+
+        /* ---- Loading Screen ---- */
+        .loading-screen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .loading-screen.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .loading-text {
+            font-size: 1.1em;
+            color: #888;
+            margin-bottom: 1.5em;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #222;
+            border-top-color: #4ade80;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ---- Karaoke Stage ---- */
+        .karaoke-stage {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+            z-index: 50;
+        }
+
+        .karaoke-stage.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .rick-bg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.35;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: #4ade80;
+            z-index: 60;
+            width: 0%;
+            transition: width linear;
+            box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+        }
+
+        /* Song info banner */
+        .now-playing {
+            position: fixed;
+            top: 1.2em;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 60;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .now-playing.visible { opacity: 1; }
+
+        .now-playing-label {
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #4ade80;
+            margin-bottom: 0.3em;
+        }
+
+        .now-playing-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .now-playing-artist {
+            font-size: 0.85em;
+            color: #888;
+        }
+
+        /* Lyrics display */
+        .karaoke-lyrics {
+            position: relative;
+            z-index: 55;
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-weight: 700;
+            font-size: clamp(1.3em, 4.5vw, 2.8em);
+            line-height: 1.5;
+        }
+
+        .lyric-line {
+            display: block;
+            margin: 0.3em 0;
+            color: #555;
+            opacity: 0;
+            transform: translateY(0.4em) scale(0.96);
+            transition: opacity 0.5s ease, transform 0.5s ease, color 0.4s ease, text-shadow 0.4s ease;
+        }
+
+        .lyric-line.upcoming {
+            opacity: 0.35;
+            transform: translateY(0) scale(0.96);
+            color: #777;
+        }
+
+        .lyric-line.active {
+            opacity: 1;
+            transform: translateY(0) scale(1.05);
+            color: #4ade80;
+            text-shadow: 0 0 20px rgba(74, 222, 128, 0.5), 0 2px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .lyric-line.past {
+            opacity: 0.2;
+            transform: translateY(0) scale(0.94);
+            color: #444;
+        }
+
+        /* Mute button */
+        .mute-btn {
+            position: fixed;
+            top: 1em;
+            right: 1em;
+            z-index: 60;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 3em;
+            height: 3em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.6s ease, background 0.3s ease;
+        }
+
+        .mute-btn.visible { opacity: 1; }
+
+        .mute-btn:hover,
+        .mute-btn:focus {
+            background: rgba(255, 255, 255, 0.25);
+            outline: 2px solid rgba(255, 255, 255, 0.3);
+            outline-offset: 2px;
+        }
+
+        /* Back button */
+        .back-btn {
+            position: fixed;
+            bottom: 1.2em;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 60;
+            color: #888;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 0.5em 1.4em;
+            font-size: 0.85em;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.6s ease, background 0.2s, color 0.2s;
+        }
+
+        .back-btn.visible { opacity: 1; }
+
+        .back-btn:hover,
+        .back-btn:focus {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            outline: 2px solid rgba(255, 255, 255, 0.3);
+            outline-offset: 2px;
+        }
+
+        /* Score display (troll) */
+        .score {
+            position: fixed;
+            bottom: 4em;
+            right: 1.5em;
+            z-index: 60;
+            text-align: right;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .score.visible { opacity: 1; }
+
+        .score-label {
+            font-size: 0.65em;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #666;
+        }
+
+        .score-value {
+            font-size: 1.8em;
+            font-weight: 800;
+            color: #4ade80;
+            text-shadow: 0 0 12px rgba(74, 222, 128, 0.3);
+        }
+
+        /* Footer */
+        .site-footer {
+            margin-top: auto;
+            padding: 2em 0 1em;
+            color: #444;
+            font-size: 0.85em;
+        }
+
+        .site-footer a { color: #666; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .song-card { transition: none; }
+            .loading-spinner { animation: none; }
+            .loading-screen { transition: none; }
+            .karaoke-stage { transition: none; }
+            .song-select { transition: none; }
+            .lyric-line { transition: none; }
+            .mute-btn, .back-btn, .now-playing, .score { transition: none; }
+            .progress-bar { transition: none; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Song Selection Screen -->
+    <div class="song-select" id="song-select">
+        <div class="logo">W.R.A.A.S. Karaoke</div>
+        <p class="tagline">Pick a song. Sing your heart out.</p>
+
+        <div class="search-wrap">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input class="search-bar" type="text" placeholder="Search songs..." id="search-bar" spellcheck="false" autocomplete="off">
+        </div>
+
+        <div class="song-grid" id="song-grid"></div>
+
+        <footer class="site-footer">
+            <a href="https://github.com/wraas/wraas.github.io">GitHub</a>
+        </footer>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-text" id="loading-text">Preparing karaoke track...</div>
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Karaoke Stage -->
+    <div class="karaoke-stage" id="karaoke-stage">
+        <img class="rick-bg" src="https://media.giphy.com/media/Ju7l5y9osyymQ/giphy.gif" alt="" aria-hidden="true">
+
+        <div class="progress-bar" id="progress-bar"></div>
+
+        <div class="now-playing" id="now-playing">
+            <div class="now-playing-label">Now Playing</div>
+            <div class="now-playing-title" id="np-title"></div>
+            <div class="now-playing-artist" id="np-artist"></div>
+        </div>
+
+        <div class="karaoke-lyrics" id="karaoke-lyrics" aria-live="polite" aria-atomic="false">
+            <span class="lyric-line">We're no strangers to love</span>
+            <span class="lyric-line">You know the rules and so do I</span>
+            <span class="lyric-line">A full commitment's what I'm thinking of</span>
+            <span class="lyric-line">You wouldn't get this from any other guy</span>
+            <span class="lyric-line">&nbsp;</span>
+            <span class="lyric-line">Never gonna give you up</span>
+            <span class="lyric-line">Never gonna let you down</span>
+            <span class="lyric-line">Never gonna run around and desert you</span>
+            <span class="lyric-line">Never gonna make you cry</span>
+            <span class="lyric-line">Never gonna say goodbye</span>
+            <span class="lyric-line">Never gonna tell a lie and hurt you</span>
+        </div>
+
+        <div class="score" id="score">
+            <div class="score-label">Score</div>
+            <div class="score-value" id="score-value">0</div>
+        </div>
+    </div>
+
+    <button class="mute-btn" id="mute-btn" aria-label="Mute audio">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+    </button>
+
+    <button class="back-btn" id="back-btn" aria-label="Back to song selection">Back to songs</button>
+
+    <script>
+        (function() {
+            // ---- Song catalog (the bait) ----
+            var songs = [
+                { title: "Bohemian Rhapsody", artist: "Queen", genre: "Rock", difficulty: "hard" },
+                { title: "Imagine", artist: "John Lennon", genre: "Ballad", difficulty: "easy" },
+                { title: "Hotel California", artist: "Eagles", genre: "Rock", difficulty: "medium" },
+                { title: "Wonderwall", artist: "Oasis", genre: "Britpop", difficulty: "easy" },
+                { title: "Sweet Caroline", artist: "Neil Diamond", genre: "Pop", difficulty: "easy" },
+                { title: "Don't Stop Believin'", artist: "Journey", genre: "Rock", difficulty: "medium" },
+                { title: "Yesterday", artist: "The Beatles", genre: "Ballad", difficulty: "easy" },
+                { title: "Smells Like Teen Spirit", artist: "Nirvana", genre: "Grunge", difficulty: "hard" },
+                { title: "Mr. Brightside", artist: "The Killers", genre: "Indie", difficulty: "medium" },
+                { title: "Shallow", artist: "Lady Gaga & Bradley Cooper", genre: "Ballad", difficulty: "hard" },
+                { title: "Take On Me", artist: "a-ha", genre: "Synth-pop", difficulty: "hard" },
+                { title: "Dancing Queen", artist: "ABBA", genre: "Disco", difficulty: "easy" }
+            ];
+
+            var songGrid = document.getElementById("song-grid");
+            var searchBar = document.getElementById("search-bar");
+
+            function renderSongs(filter) {
+                songGrid.innerHTML = "";
+                var lowerFilter = (filter || "").toLowerCase();
+                songs.forEach(function(song, i) {
+                    if (lowerFilter && song.title.toLowerCase().indexOf(lowerFilter) === -1 &&
+                        song.artist.toLowerCase().indexOf(lowerFilter) === -1 &&
+                        song.genre.toLowerCase().indexOf(lowerFilter) === -1) {
+                        return;
+                    }
+                    var card = document.createElement("div");
+                    card.className = "song-card";
+                    card.setAttribute("tabindex", "0");
+                    card.setAttribute("role", "button");
+                    card.setAttribute("aria-label", "Sing " + song.title + " by " + song.artist);
+                    card.innerHTML =
+                        '<div class="song-title">' + song.title + '</div>' +
+                        '<div class="song-artist">' + song.artist + '</div>' +
+                        '<div class="song-meta">' +
+                            '<span class="song-tag">' + song.genre + '</span>' +
+                            '<span class="song-tag difficulty-' + song.difficulty + '">' +
+                                song.difficulty.charAt(0).toUpperCase() + song.difficulty.slice(1) +
+                            '</span>' +
+                        '</div>' +
+                        '<span class="sing-label">Sing &rarr;</span>';
+
+                    card.addEventListener("click", function() { startSong(song); });
+                    card.addEventListener("keydown", function(e) {
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            startSong(song);
+                        }
+                    });
+                    songGrid.appendChild(card);
+                });
+            }
+
+            searchBar.addEventListener("input", function() {
+                renderSongs(searchBar.value);
+            });
+
+            renderSongs();
+
+            // ---- Elements ----
+            var songSelect = document.getElementById("song-select");
+            var loadingScreen = document.getElementById("loading-screen");
+            var loadingText = document.getElementById("loading-text");
+            var karaokeStage = document.getElementById("karaoke-stage");
+            var muteBtn = document.getElementById("mute-btn");
+            var backBtn = document.getElementById("back-btn");
+            var nowPlaying = document.getElementById("now-playing");
+            var npTitle = document.getElementById("np-title");
+            var npArtist = document.getElementById("np-artist");
+            var progressBar = document.getElementById("progress-bar");
+            var scoreEl = document.getElementById("score");
+            var scoreValue = document.getElementById("score-value");
+            var lyricLines = document.querySelectorAll(".lyric-line");
+
+            // ---- Audio system ----
+            var audioCtx = null;
+            var isPlaying = false;
+            var isMuted = false;
+            var loopTimer = null;
+            var lyricTimers = [];
+            var scoreTimer = null;
+            var currentScore = 0;
+
+            // Rickroll melody
+            var notes = [
+                { freq: 440, dur: 0.25 },    // A4
+                { freq: 493.88, dur: 0.25 },  // B4
+                { freq: 329.63, dur: 0.25 },  // E4
+                { freq: 349.23, dur: 0.25 },  // F4
+                { freq: 293.66, dur: 0.5 },   // D4
+                { freq: 293.66, dur: 0.15 },  // D4
+                { freq: 329.63, dur: 0.35 },  // E4
+                { freq: 0, dur: 0.2 },
+                { freq: 440, dur: 0.25 },     // A4
+                { freq: 493.88, dur: 0.25 },  // B4
+                { freq: 329.63, dur: 0.25 },  // E4
+                { freq: 523.25, dur: 0.25 },  // C5
+                { freq: 493.88, dur: 0.25 },  // B4
+                { freq: 440, dur: 0.25 },     // A4
+                { freq: 329.63, dur: 0.5 },   // E4
+                { freq: 329.63, dur: 0.15 },  // E4
+                { freq: 293.66, dur: 0.35 },  // D4
+                { freq: 0, dur: 0.2 },
+                { freq: 440, dur: 0.25 },     // A4
+                { freq: 493.88, dur: 0.25 },  // B4
+                { freq: 329.63, dur: 0.25 },  // E4
+                { freq: 349.23, dur: 0.25 },  // F4
+                { freq: 293.66, dur: 0.5 },   // D4
+                { freq: 293.66, dur: 0.15 },  // D4
+                { freq: 329.63, dur: 0.35 },  // E4
+            ];
+
+            var melodyDuration = 0;
+            notes.forEach(function(n) { melodyDuration += n.dur; });
+
+            // 11 lyric lines: 4 verse + 1 blank + 6 chorus
+            // Spread across roughly 2 melody loops (~14s total)
+            var lyricTimingsSets = [
+                // First loop: verse lines
+                [
+                    { line: 0, time: 0 },
+                    { line: 1, time: 1600 },
+                    { line: 2, time: 3400 },
+                    { line: 3, time: 5200 }
+                ],
+                // Second loop: chorus lines
+                [
+                    { line: 4, time: 0 },
+                    { line: 5, time: 400 },
+                    { line: 6, time: 1600 },
+                    { line: 7, time: 2800 },
+                    { line: 8, time: 4200 },
+                    { line: 9, time: 5400 },
+                    { line: 10, time: 6200 }
+                ]
+            ];
+
+            function initAudio() {
+                if (audioCtx) return;
+                try {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (e) {}
+            }
+
+            function playMelody() {
+                if (!audioCtx || isPlaying) return;
+
+                var time = audioCtx.currentTime + 0.1;
+                var gainNode = audioCtx.createGain();
+                gainNode.gain.value = 0.15;
+                gainNode.connect(audioCtx.destination);
+
+                notes.forEach(function(note) {
+                    if (note.freq === 0) { time += note.dur; return; }
+                    var osc = audioCtx.createOscillator();
+                    osc.type = "square";
+                    osc.frequency.value = note.freq;
+
+                    var noteGain = audioCtx.createGain();
+                    noteGain.gain.setValueAtTime(0.15, time);
+                    noteGain.gain.exponentialRampToValueAtTime(0.01, time + note.dur - 0.02);
+
+                    osc.connect(noteGain);
+                    noteGain.connect(gainNode);
+                    osc.start(time);
+                    osc.stop(time + note.dur);
+                    time += note.dur;
+                });
+
+                isPlaying = true;
+            }
+
+            // ---- Lyric sync ----
+            var currentLoop = 0;
+
+            function showLyricLine(index) {
+                for (var i = 0; i < lyricLines.length; i++) {
+                    lyricLines[i].classList.remove("active", "past", "upcoming");
+                    if (i < index) {
+                        lyricLines[i].classList.add("past");
+                    } else if (i === index + 1 || i === index + 2) {
+                        lyricLines[i].classList.add("upcoming");
+                    }
+                }
+                if (index < lyricLines.length) {
+                    lyricLines[index].classList.add("active");
+                }
+            }
+
+            function resetLyrics() {
+                for (var i = 0; i < lyricLines.length; i++) {
+                    lyricLines[i].classList.remove("active", "past", "upcoming");
+                }
+            }
+
+            function clearTimers() {
+                lyricTimers.forEach(function(t) { clearTimeout(t); });
+                lyricTimers = [];
+                clearTimeout(loopTimer);
+                clearTimeout(scoreTimer);
+            }
+
+            function animateProgress(duration) {
+                progressBar.style.transition = "none";
+                progressBar.style.width = "0%";
+                // Force reflow
+                void progressBar.offsetWidth;
+                progressBar.style.transition = "width " + duration + "ms linear";
+                progressBar.style.width = "100%";
+            }
+
+            function bumpScore() {
+                currentScore += Math.floor(Math.random() * 30) + 10;
+                scoreValue.textContent = currentScore;
+            }
+
+            function startKaraokeLoop() {
+                if (isMuted) return;
+
+                var timings = lyricTimingsSets[currentLoop % lyricTimingsSets.length];
+                var loopDuration = (melodyDuration * 1000) + 800;
+
+                playMelody();
+                animateProgress(loopDuration);
+
+                timings.forEach(function(entry) {
+                    var t = setTimeout(function() {
+                        showLyricLine(entry.line);
+                        bumpScore();
+                    }, entry.time);
+                    lyricTimers.push(t);
+                });
+
+                loopTimer = setTimeout(function() {
+                    isPlaying = false;
+                    currentLoop++;
+                    startKaraokeLoop();
+                }, loopDuration);
+            }
+
+            function stopKaraoke() {
+                clearTimers();
+                isPlaying = false;
+                resetLyrics();
+                progressBar.style.transition = "none";
+                progressBar.style.width = "0%";
+            }
+
+            // ---- Mute ----
+            function updateMuteIcon(unmuted) {
+                if (unmuted) {
+                    muteBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
+                    muteBtn.setAttribute("aria-label", "Mute audio");
+                } else {
+                    muteBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
+                    muteBtn.setAttribute("aria-label", "Unmute audio");
+                }
+            }
+
+            muteBtn.addEventListener("click", function(e) {
+                e.stopPropagation();
+                if (isMuted) {
+                    isMuted = false;
+                    if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+                    updateMuteIcon(true);
+                    startKaraokeLoop();
+                } else {
+                    isMuted = true;
+                    if (audioCtx) audioCtx.suspend();
+                    stopKaraoke();
+                    updateMuteIcon(false);
+                }
+            });
+
+            // ---- Fake loading messages ----
+            var loadingMessages = [
+                "Preparing karaoke track...",
+                "Loading vocal isolation...",
+                "Syncing lyrics...",
+                "Warming up the mic...",
+                "Cueing up the music..."
+            ];
+
+            // ---- Start song (the troll) ----
+            function startSong(song) {
+                // Show loading
+                loadingText.textContent = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+                loadingScreen.classList.add("visible");
+                songSelect.classList.add("hidden");
+
+                // Set "now playing" info (shows the selected song title for extra troll)
+                npTitle.textContent = song.title;
+                npArtist.textContent = song.artist;
+
+                // Init audio on user gesture
+                initAudio();
+
+                setTimeout(function() {
+                    loadingScreen.classList.remove("visible");
+
+                    setTimeout(function() {
+                        // Reveal the karaoke stage
+                        karaokeStage.classList.add("visible");
+                        nowPlaying.classList.add("visible");
+                        muteBtn.classList.add("visible");
+                        backBtn.classList.add("visible");
+                        scoreEl.classList.add("visible");
+
+                        currentScore = 0;
+                        scoreValue.textContent = "0";
+                        currentLoop = 0;
+
+                        updateMuteIcon(true);
+                        startKaraokeLoop();
+                    }, 400);
+                }, 2000);
+            }
+
+            // ---- Back to songs ----
+            backBtn.addEventListener("click", function() {
+                stopKaraoke();
+                karaokeStage.classList.remove("visible");
+                nowPlaying.classList.remove("visible");
+                muteBtn.classList.remove("visible");
+                backBtn.classList.remove("visible");
+                scoreEl.classList.remove("visible");
+
+                if (audioCtx) {
+                    audioCtx.suspend();
+                    isMuted = false;
+                }
+
+                setTimeout(function() {
+                    songSelect.classList.remove("hidden");
+                }, 300);
+            });
+        })();
+    </script>
+</body>
+
+</html>
