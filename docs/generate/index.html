@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>W.R.A.A.S. — Link Generator</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2em 1em;
+        }
+
+        h1 {
+            font-size: clamp(1.5em, 4vw, 2.2em);
+            margin-bottom: 0.3em;
+            color: #fff;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 2em;
+            font-size: 1em;
+        }
+
+        .generator {
+            width: 100%;
+            max-width: 600px;
+            background: #161616;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 2em;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85em;
+            color: #aaa;
+            margin-bottom: 0.4em;
+            margin-top: 1.2em;
+        }
+
+        label:first-child { margin-top: 0; }
+
+        select, input {
+            width: 100%;
+            padding: 0.7em 1em;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input:focus {
+            border-color: #1a73e8;
+        }
+
+        .output-group {
+            margin-top: 1.5em;
+            padding-top: 1.5em;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .output-label {
+            font-size: 0.85em;
+            color: #aaa;
+            margin-bottom: 0.4em;
+        }
+
+        .output-box {
+            display: flex;
+            gap: 0.5em;
+        }
+
+        .output-url {
+            flex: 1;
+            padding: 0.7em 1em;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #4ade80;
+            font-family: monospace;
+            font-size: 0.95em;
+            word-break: break-all;
+            cursor: text;
+            user-select: all;
+        }
+
+        .copy-btn {
+            padding: 0.7em 1.2em;
+            background: #1a73e8;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover { background: #1557b0; }
+        .copy-btn.copied { background: #16a34a; }
+
+        .preview-card {
+            margin-top: 1.5em;
+            padding: 1em;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+
+        .preview-card-title {
+            font-weight: 700;
+            color: #fff;
+            font-size: 0.95em;
+        }
+
+        .preview-card-desc {
+            color: #888;
+            font-size: 0.85em;
+            margin-top: 0.3em;
+        }
+
+        .preview-card-domain {
+            color: #555;
+            font-size: 0.75em;
+            margin-top: 0.5em;
+        }
+
+        .preview-label {
+            font-size: 0.75em;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5em;
+        }
+
+        .suggestion-chip {
+            background: #1a1a2e;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 0.4em 0.8em;
+            color: #8ecae6;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .suggestion-chip:hover {
+            background: #1a73e8;
+            border-color: #1a73e8;
+            color: #fff;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>W.R.A.A.S.</h1>
+    <p class="subtitle">Generate disguised rickroll links</p>
+
+    <div class="generator">
+        <label for="theme">Scenario</label>
+        <select id="theme">
+            <option value="">Direct rickroll (no loading screen)</option>
+            <option value="meeting">Meeting redirect</option>
+            <option value="document">Shared document</option>
+            <option value="password-reset">Password reset</option>
+            <option value="invoice">Invoice</option>
+            <option value="survey">Survey</option>
+        </select>
+
+        <label for="custom-path">Custom path — include the scenario keyword anywhere to trigger its theme</label>
+        <input type="text" id="custom-path" placeholder="e.g. quarterly-review" spellcheck="false">
+
+        <div id="suggestions" style="margin-top:0.6em;display:none;">
+            <div style="font-size:0.75em;color:#666;margin-bottom:0.4em;">Try a disguised path:</div>
+            <div id="suggestion-chips" style="display:flex;flex-wrap:wrap;gap:0.4em;"></div>
+        </div>
+
+        <div class="output-group">
+            <div class="output-label">Your link</div>
+            <div class="output-box">
+                <div class="output-url" id="output-url"></div>
+                <button class="copy-btn" id="copy-btn">Copy</button>
+            </div>
+        </div>
+
+        <div class="preview-card">
+            <div class="preview-label">Link preview</div>
+            <div class="preview-card-title" id="preview-title">Important Notice — Action Required</div>
+            <div class="preview-card-desc" id="preview-desc">You have a pending action that requires your immediate attention. Please review this document.</div>
+            <div class="preview-card-domain" id="preview-domain"></div>
+        </div>
+    </div>
+
+<script>
+        (function() {
+            var themeSelect = document.getElementById("theme");
+            var customPath = document.getElementById("custom-path");
+            var outputUrl = document.getElementById("output-url");
+            var copyBtn = document.getElementById("copy-btn");
+            var previewTitle = document.getElementById("preview-title");
+            var previewDesc = document.getElementById("preview-desc");
+            var previewDomain = document.getElementById("preview-domain");
+            previewDomain.textContent = window.location.host;
+
+            var scenarios = {
+                "": {
+                    title: "Important Notice — Action Required",
+                    desc: "You have a pending action that requires your immediate attention. Please review this document.",
+                    suggestions: []
+                },
+                "meeting": {
+                    title: "You've been invited to a meeting",
+                    desc: "Your attendance is required. Click to join the meeting room now.",
+                    suggestions: [
+                        "team-meeting-q3-review",
+                        "standup-meeting-notes",
+                        "all-hands-meeting-2026",
+                        "meeting-room-booking",
+                        "client-meeting-recap"
+                    ]
+                },
+                "document": {
+                    title: "Shared Document — Review Required",
+                    desc: "A document has been shared with you. Please review and approve before the deadline.",
+                    suggestions: [
+                        "shared-document-final-v2",
+                        "document-approval-needed",
+                        "onboarding-document-new-hire",
+                        "policy-document-update",
+                        "document-sign-request"
+                    ]
+                },
+                "password-reset": {
+                    title: "Password Reset Request",
+                    desc: "A password reset was requested for your account. Click to verify your identity and set a new password.",
+                    suggestions: [
+                        "account-password-reset-verify",
+                        "password-reset-confirmation",
+                        "urgent-password-reset-required",
+                        "it-password-reset-ticket",
+                        "password-reset-link-2026"
+                    ]
+                },
+                "invoice": {
+                    title: "Invoice #48291 — Payment Due",
+                    desc: "You have an outstanding invoice that requires your attention. Please review the details.",
+                    suggestions: [
+                        "invoice-payment-overdue",
+                        "vendor-invoice-march-2026",
+                        "invoice-approval-pending",
+                        "expense-invoice-receipt",
+                        "invoice-reminder-final"
+                    ]
+                },
+                "survey": {
+                    title: "Quick Survey — Your Feedback Matters",
+                    desc: "We'd love to hear your thoughts. This survey takes less than 2 minutes to complete.",
+                    suggestions: [
+                        "employee-satisfaction-survey",
+                        "quick-survey-feedback",
+                        "annual-survey-2026",
+                        "customer-survey-nps",
+                        "exit-survey-form"
+                    ]
+                }
+            };
+
+            var suggestionsDiv = document.getElementById("suggestions");
+            var chipsDiv = document.getElementById("suggestion-chips");
+
+            function detectScenario(path) {
+                var lower = path.toLowerCase();
+                var keys = Object.keys(scenarios);
+                for (var i = 0; i < keys.length; i++) {
+                    if (!keys[i]) continue;
+                    var keyword = keys[i].replace("-", "[-_]?");
+                    if (lower.match(new RegExp(keyword))) return keys[i];
+                }
+                return "";
+            }
+
+            function showSuggestions(theme) {
+                var scenario = scenarios[theme];
+                if (!scenario || !scenario.suggestions.length) {
+                    suggestionsDiv.style.display = "none";
+                    return;
+                }
+                chipsDiv.innerHTML = "";
+                scenario.suggestions.forEach(function(s) {
+                    var chip = document.createElement("span");
+                    chip.className = "suggestion-chip";
+                    chip.textContent = s;
+                    chip.addEventListener("click", function() {
+                        customPath.value = s;
+                        updateUrl();
+                    });
+                    chipsDiv.appendChild(chip);
+                });
+                suggestionsDiv.style.display = "block";
+            }
+
+            function updateUrl() {
+                var theme = themeSelect.value;
+                var custom = customPath.value.trim().replace(/^\/+/, "").replace(/[^a-zA-Z0-9\-_]/g, "");
+                var path = custom || theme;
+                var base = window.location.origin + "/";
+                var url = base + (path ? path : "");
+                outputUrl.textContent = url;
+
+                // Detect scenario from custom path or use selected theme
+                var matched = custom ? detectScenario(custom) : theme;
+                var preview = scenarios[matched] || scenarios[""];
+                previewTitle.textContent = preview.title;
+                previewDesc.textContent = preview.desc;
+            }
+
+            themeSelect.addEventListener("change", function() {
+                customPath.value = "";
+                showSuggestions(themeSelect.value);
+                updateUrl();
+            });
+            customPath.addEventListener("input", updateUrl);
+            updateUrl();
+
+            copyBtn.addEventListener("click", function() {
+                var url = outputUrl.textContent;
+                navigator.clipboard.writeText(url).then(function() {
+                    copyBtn.textContent = "Copied!";
+                    copyBtn.classList.add("copied");
+                    setTimeout(function() {
+                        copyBtn.textContent = "Copy";
+                        copyBtn.classList.remove("copied");
+                    }, 2000);
+                });
+            });
+        })();
+
+        // --- Cookie consent melody ---
+        (function() {
+            var audioCtx = null;
+            var isPlaying = false;
+            var melodyTimeout = null;
+
+            var beat = 60 / 113;
+            var eighth = beat / 2;
+            var quarter = beat;
+            var dottedQuarter = beat * 1.5;
+
+            var notes = [
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
+                { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: dottedQuarter },
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 659.25, dur: eighth },
+                { freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 440, dur: quarter },{ freq: 0, dur: quarter },
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
+                { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 329.63, dur: eighth },
+                { freq: 293.66, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 293.66, dur: dottedQuarter },{ freq: 0, dur: quarter },
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
+                { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: dottedQuarter },
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 659.25, dur: eighth },
+                { freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 440, dur: quarter },{ freq: 0, dur: quarter },
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
+                { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 329.63, dur: eighth },
+                { freq: 293.66, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 293.66, dur: dottedQuarter },{ freq: 0, dur: quarter },
+            ];
+
+            function initAudio() {
+                if (audioCtx) return;
+                try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+            }
+
+            function playMelody() {
+                if (!audioCtx || isPlaying) return;
+                var time = audioCtx.currentTime + 0.1;
+                var gainNode = audioCtx.createGain();
+                gainNode.gain.value = 0.15;
+                gainNode.connect(audioCtx.destination);
+                notes.forEach(function(note) {
+                    if (note.freq === 0) { time += note.dur; return; }
+                    var osc = audioCtx.createOscillator();
+                    osc.type = "square";
+                    osc.frequency.value = note.freq;
+                    var noteGain = audioCtx.createGain();
+                    noteGain.gain.setValueAtTime(0.15, time);
+                    noteGain.gain.exponentialRampToValueAtTime(0.01, time + note.dur - 0.02);
+                    osc.connect(noteGain);
+                    noteGain.connect(gainNode);
+                    osc.start(time);
+                    osc.stop(time + note.dur);
+                    time += note.dur;
+                });
+                isPlaying = true;
+                var dur = (time - audioCtx.currentTime) * 1000;
+                melodyTimeout = setTimeout(function() { isPlaying = false; playMelody(); }, dur);
+            }
+
+            function showConsentBanner() {
+                var existing = document.getElementById("audio-hint");
+                if (existing) existing.remove();
+                var banner = document.createElement("div");
+                banner.id = "audio-hint";
+                banner.style.cssText = "position:fixed;bottom:0;left:0;width:100%;z-index:50;background:#2b2d42;color:#edf2f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;box-shadow:0 -2px 12px rgba(0,0,0,0.4);";
+                banner.innerHTML = '<div style="flex:1;min-width:200px;">'
+                    + '<div style="font-size:14px;font-weight:600;margin-bottom:4px;">We value your privacy (when aligned with our profits)</div>'
+                    + '<div style="font-size:12px;opacity:0.8;">We use cookies to <s>track you</s> enhance your browsing experience. Your choice won\'t be remembered because, frankly, nobody cares. You\'ll see this again next time. Such is life. <a href="#" id="audio-hint-policy" style="color:#8ecae6;text-decoration:underline;">Cookie Policy</a></div>'
+                    + '</div>'
+                    + '<div style="display:flex;gap:8px;flex-shrink:0;">'
+                    + '<button id="audio-hint-reject" style="background:transparent;border:1px solid #8d99ae;color:#edf2f4;padding:8px 20px;border-radius:4px;font-size:13px;cursor:pointer;">Reject All</button>'
+                    + '<button id="audio-hint-accept" style="background:#3b82f6;border:none;color:#fff;padding:8px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">Accept All</button>'
+                    + '</div>';
+                document.body.appendChild(banner);
+                function onConsent() {
+                    banner.remove();
+                    initAudio();
+                    if (audioCtx && audioCtx.state === "suspended") {
+                        audioCtx.resume().then(function() { playMelody(); });
+                    } else {
+                        playMelody();
+                    }
+                }
+                banner.querySelector("#audio-hint-accept").addEventListener("click", onConsent);
+                banner.querySelector("#audio-hint-reject").addEventListener("click", onConsent);
+                banner.querySelector("#audio-hint-policy").addEventListener("click", function(e) { e.preventDefault(); onConsent(); });
+            }
+
+            showConsentBanner();
+
+            // Any click or tap triggers the melody (maximum trolling)
+            function ensureMelody() {
+                initAudio();
+                if (!audioCtx) return;
+                if (audioCtx.state === "suspended") {
+                    audioCtx.resume().then(function() {
+                        if (!isPlaying) playMelody();
+                    });
+                } else if (!isPlaying) {
+                    playMelody();
+                }
+            }
+            document.addEventListener("click", ensureMelody);
+            document.addEventListener("touchstart", ensureMelody);
+        })();
+    </script>
+</body>
+
+</html>
