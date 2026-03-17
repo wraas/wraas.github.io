@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f8f9fa"/>
+  <rect x="60" y="40" width="1080" height="550" rx="12" fill="#fff" stroke="#dee2e6" stroke-width="2"/>
+  <!-- Header bar -->
+  <rect x="60" y="40" width="1080" height="70" rx="12" fill="#1a73e8"/>
+  <rect x="60" y="80" width="1080" height="30" fill="#1a73e8"/>
+  <!-- Lock icon -->
+  <g transform="translate(100, 55)" fill="#fff">
+    <rect x="6" y="14" width="16" height="14" rx="2"/>
+    <path d="M8 14V10a6 6 0 0 1 12 0v4" fill="none" stroke="#fff" stroke-width="2.5"/>
+    <circle cx="14" cy="21" r="2"/>
+  </g>
+  <text x="140" y="85" font-family="Arial, sans-serif" font-size="22" fill="#fff" font-weight="bold">Secure Document Portal</text>
+  <!-- Document icon -->
+  <g transform="translate(520, 170)">
+    <rect x="0" y="0" width="120" height="150" rx="8" fill="#e8f0fe" stroke="#1a73e8" stroke-width="2"/>
+    <rect x="20" y="30" width="80" height="6" rx="3" fill="#1a73e8" opacity="0.4"/>
+    <rect x="20" y="50" width="60" height="6" rx="3" fill="#1a73e8" opacity="0.3"/>
+    <rect x="20" y="70" width="70" height="6" rx="3" fill="#1a73e8" opacity="0.3"/>
+    <rect x="20" y="90" width="50" height="6" rx="3" fill="#1a73e8" opacity="0.2"/>
+    <rect x="20" y="110" width="65" height="6" rx="3" fill="#1a73e8" opacity="0.2"/>
+  </g>
+  <!-- Title -->
+  <text x="600" y="380" font-family="Arial, sans-serif" font-size="32" fill="#202124" font-weight="bold" text-anchor="middle">Important Notice</text>
+  <text x="600" y="420" font-family="Arial, sans-serif" font-size="20" fill="#5f6368" text-anchor="middle">You have a pending action that requires your attention</text>
+  <!-- Button -->
+  <rect x="470" y="460" width="260" height="50" rx="25" fill="#1a73e8"/>
+  <text x="600" y="492" font-family="Arial, sans-serif" font-size="18" fill="#fff" font-weight="bold" text-anchor="middle">Review Document</text>
+</svg>
