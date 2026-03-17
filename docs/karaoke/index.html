@@ -80,10 +80,22 @@
 
         .song-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            grid-template-columns: 1fr;
             gap: 1em;
             width: 100%;
-            max-width: 700px;
+            max-width: 1200px;
+        }
+
+        @media (min-width: 500px) {
+            .song-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (min-width: 800px) {
+            .song-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (min-width: 1100px) {
+            .song-grid { grid-template-columns: repeat(4, 1fr); }
         }
 
         .song-card {
@@ -134,6 +146,7 @@
         .song-tag.difficulty-easy { color: #4ade80; background: rgba(74, 222, 128, 0.1); }
         .song-tag.difficulty-medium { color: #facc15; background: rgba(250, 204, 21, 0.1); }
         .song-tag.difficulty-hard { color: #f87171; background: rgba(248, 113, 113, 0.1); }
+        .song-tag.difficulty-legendary { color: #facc15; background: rgba(250, 204, 21, 0.15); text-transform: uppercase; letter-spacing: 0.05em; }
 
         .sing-label {
             position: absolute;
@@ -265,45 +278,63 @@
             color: #888;
         }
 
-        /* Lyrics display */
+        /* Lyrics display — karaoke-style sliding window */
         .karaoke-lyrics {
             position: relative;
             z-index: 55;
             width: 90%;
-            max-width: 800px;
+            max-width: 900px;
             text-align: center;
             font-family: 'Segoe UI', Roboto, sans-serif;
             font-weight: 700;
-            font-size: clamp(1.3em, 4.5vw, 2.8em);
-            line-height: 1.5;
+            font-size: clamp(1.4em, 5vw, 3em);
+            line-height: 1.8;
+            overflow: hidden;
         }
 
         .lyric-line {
             display: block;
-            margin: 0.3em 0;
-            color: #555;
+            margin: 0.2em 0;
+            color: rgba(255, 255, 255, 0.25);
             opacity: 0;
-            transform: translateY(0.4em) scale(0.96);
-            transition: opacity 0.5s ease, transform 0.5s ease, color 0.4s ease, text-shadow 0.4s ease;
+            transition: opacity 0.4s ease, transform 0.4s ease, color 0.4s ease;
+            transform: translateY(0.3em);
+            position: relative;
         }
 
-        .lyric-line.upcoming {
-            opacity: 0.35;
-            transform: translateY(0) scale(0.96);
-            color: #777;
+        .lyric-line.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .lyric-line.active {
-            opacity: 1;
-            transform: translateY(0) scale(1.05);
-            color: #4ade80;
-            text-shadow: 0 0 20px rgba(74, 222, 128, 0.5), 0 2px 10px rgba(0, 0, 0, 0.8);
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 1.1em;
         }
 
-        .lyric-line.past {
-            opacity: 0.2;
-            transform: translateY(0) scale(0.94);
-            color: #444;
+        .lyric-line.sung {
+            color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-0.1em) scale(0.95);
+        }
+
+        /* Sweeping fill overlay for active line — uses background-clip for proper multi-line sweep */
+        .lyric-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            text-align: center;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            background-image: linear-gradient(to right, #4ade80 50%, transparent 50%);
+            background-size: 200% 100%;
+            background-position: 100% 0;
+            text-shadow: none;
+            pointer-events: none;
+            transition: background-position linear;
+            filter: drop-shadow(0 0 12px rgba(74, 222, 128, 0.5));
         }
 
         /* Mute button */
@@ -390,17 +421,7 @@
             text-shadow: 0 0 12px rgba(74, 222, 128, 0.3);
         }
 
-        /* Footer */
-        .site-footer {
-            margin-top: auto;
-            padding: 2em 0 1em;
-            color: #444;
-            font-size: 0.85em;
-        }
-
-        .site-footer a { color: #666; }
-
-        @media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
             .song-card { transition: none; }
             .loading-spinner { animation: none; }
             .loading-screen { transition: none; }
@@ -428,9 +449,6 @@
 
         <div class="song-grid" id="song-grid"></div>
 
-        <footer class="site-footer">
-            <a href="https://github.com/wraas/wraas.github.io">GitHub</a>
-        </footer>
     </div>
 
     <!-- Loading Screen -->
@@ -451,19 +469,7 @@
             <div class="now-playing-artist" id="np-artist"></div>
         </div>
 
-        <div class="karaoke-lyrics" id="karaoke-lyrics" aria-live="polite" aria-atomic="false">
-            <span class="lyric-line">We're no strangers to love</span>
-            <span class="lyric-line">You know the rules and so do I</span>
-            <span class="lyric-line">A full commitment's what I'm thinking of</span>
-            <span class="lyric-line">You wouldn't get this from any other guy</span>
-            <span class="lyric-line">&nbsp;</span>
-            <span class="lyric-line">Never gonna give you up</span>
-            <span class="lyric-line">Never gonna let you down</span>
-            <span class="lyric-line">Never gonna run around and desert you</span>
-            <span class="lyric-line">Never gonna make you cry</span>
-            <span class="lyric-line">Never gonna say goodbye</span>
-            <span class="lyric-line">Never gonna tell a lie and hurt you</span>
-        </div>
+        <div class="karaoke-lyrics" id="karaoke-lyrics" aria-live="polite" aria-atomic="false"></div>
 
         <div class="score" id="score">
             <div class="score-label">Score</div>
@@ -502,11 +508,26 @@
             var songGrid = document.getElementById("song-grid");
             var searchBar = document.getElementById("search-bar");
 
+            var rickLyrics = [
+                { title: "Never gonna give you up", artist: "Rick Astley", genre: "Pop", difficulty: "legendary" },
+                { title: "Never gonna let you down", artist: "Rick Astley", genre: "Pop", difficulty: "legendary" },
+                { title: "Never gonna run around and desert you", artist: "Rick Astley", genre: "Pop", difficulty: "legendary" },
+                { title: "Never gonna make you cry", artist: "Rick Astley", genre: "Pop", difficulty: "legendary" },
+                { title: "Never gonna say goodbye", artist: "Rick Astley", genre: "Pop", difficulty: "legendary" },
+                { title: "Never gonna tell a lie and hurt you", artist: "Rick Astley", genre: "Pop", difficulty: "legendary" }
+            ];
+
             function renderSongs(filter) {
                 songGrid.innerHTML = "";
                 var lowerFilter = (filter || "").toLowerCase();
-                songs.forEach(function(song, i) {
-                    if (lowerFilter && song.title.toLowerCase().indexOf(lowerFilter) === -1 &&
+
+                // Easter egg: searching "never" or "rick" reveals the true setlist
+                var catalog = (lowerFilter.indexOf("never") !== -1 || lowerFilter.indexOf("rick") !== -1)
+                    ? rickLyrics : songs;
+
+                catalog.forEach(function(song, i) {
+                    if (catalog === songs && lowerFilter &&
+                        song.title.toLowerCase().indexOf(lowerFilter) === -1 &&
                         song.artist.toLowerCase().indexOf(lowerFilter) === -1 &&
                         song.genre.toLowerCase().indexOf(lowerFilter) === -1) {
                         return;
@@ -557,7 +578,7 @@
             var progressBar = document.getElementById("progress-bar");
             var scoreEl = document.getElementById("score");
             var scoreValue = document.getElementById("score-value");
-            var lyricLines = document.querySelectorAll(".lyric-line");
+            var lyricsContainer = document.getElementById("karaoke-lyrics");
 
             // ---- Audio system ----
             var audioCtx = null;
@@ -568,59 +589,111 @@
             var scoreTimer = null;
             var currentScore = 0;
 
-            // Rickroll melody
+            // Rickroll melody — 6 chorus lines at 113 BPM
+            var beat = 60 / 113;
+            var eighth = beat / 2;
+            var quarter = beat;
+            var dottedQuarter = beat * 1.5;
+
             var notes = [
-                { freq: 440, dur: 0.25 },    // A4
-                { freq: 493.88, dur: 0.25 },  // B4
-                { freq: 329.63, dur: 0.25 },  // E4
-                { freq: 349.23, dur: 0.25 },  // F4
-                { freq: 293.66, dur: 0.5 },   // D4
-                { freq: 293.66, dur: 0.15 },  // D4
-                { freq: 329.63, dur: 0.35 },  // E4
-                { freq: 0, dur: 0.2 },
-                { freq: 440, dur: 0.25 },     // A4
-                { freq: 493.88, dur: 0.25 },  // B4
-                { freq: 329.63, dur: 0.25 },  // E4
-                { freq: 523.25, dur: 0.25 },  // C5
-                { freq: 493.88, dur: 0.25 },  // B4
-                { freq: 440, dur: 0.25 },     // A4
-                { freq: 329.63, dur: 0.5 },   // E4
-                { freq: 329.63, dur: 0.15 },  // E4
-                { freq: 293.66, dur: 0.35 },  // D4
-                { freq: 0, dur: 0.2 },
-                { freq: 440, dur: 0.25 },     // A4
-                { freq: 493.88, dur: 0.25 },  // B4
-                { freq: 329.63, dur: 0.25 },  // E4
-                { freq: 349.23, dur: 0.25 },  // F4
-                { freq: 293.66, dur: 0.5 },   // D4
-                { freq: 293.66, dur: 0.15 },  // D4
-                { freq: 329.63, dur: 0.35 },  // E4
+                // Line 1: "Never gonna give you up"
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
+                { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: dottedQuarter },
+                // Line 2: "Never gonna let you down"
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 659.25, dur: eighth },
+                { freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 440, dur: quarter },{ freq: 0, dur: quarter },
+                // Line 3: "Never gonna run around and desert you"
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
+                { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 329.63, dur: eighth },
+                { freq: 293.66, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 293.66, dur: dottedQuarter },{ freq: 0, dur: quarter },
+                // Line 4: "Never gonna make you cry"
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
+                { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: dottedQuarter },
+                // Line 5: "Never gonna say goodbye"
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 659.25, dur: eighth },
+                { freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 440, dur: quarter },{ freq: 0, dur: quarter },
+                // Line 6: "Never gonna tell a lie and hurt you"
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
+                { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 329.63, dur: eighth },
+                { freq: 293.66, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 293.66, dur: dottedQuarter },{ freq: 0, dur: quarter },
             ];
 
             var melodyDuration = 0;
             notes.forEach(function(n) { melodyDuration += n.dur; });
 
-            // 11 lyric lines: 4 verse + 1 blank + 6 chorus
-            // Spread across roughly 2 melody loops (~14s total)
-            var lyricTimingsSets = [
-                // First loop: verse lines
-                [
-                    { line: 0, time: 0 },
-                    { line: 1, time: 1600 },
-                    { line: 2, time: 3400 },
-                    { line: 3, time: 5200 }
-                ],
-                // Second loop: chorus lines
-                [
-                    { line: 4, time: 0 },
-                    { line: 5, time: 400 },
-                    { line: 6, time: 1600 },
-                    { line: 7, time: 2800 },
-                    { line: 8, time: 4200 },
-                    { line: 9, time: 5400 },
-                    { line: 10, time: 6200 }
-                ]
+            // ---- Lyrics data synced to melody (6 chorus lines) ----
+            // Start times and durations computed from note durations
+            var chorusLyrics = [
+                { text: "Never gonna give you up", start: 0, dur: 0 },
+                { text: "Never gonna let you down", start: 0, dur: 0 },
+                { text: "Never gonna run around and desert you", start: 0, dur: 0 },
+                { text: "Never gonna make you cry", start: 0, dur: 0 },
+                { text: "Never gonna say goodbye", start: 0, dur: 0 },
+                { text: "Never gonna tell a lie and hurt you", start: 0, dur: 0 },
             ];
+
+            // Compute start/dur from note durations (7, 8, 12, 7, 8, 12 notes per line)
+            (function() {
+                var notesPerLine = [7, 8, 12, 7, 8, 12];
+                var noteIndex = 0;
+                var timeMs = 0;
+                for (var i = 0; i < 6; i++) {
+                    chorusLyrics[i].start = Math.round(timeMs);
+                    var lineDur = 0;
+                    for (var j = 0; j < notesPerLine[i]; j++) {
+                        lineDur += notes[noteIndex].dur;
+                        noteIndex++;
+                    }
+                    chorusLyrics[i].dur = Math.round(lineDur * 1000);
+                    timeMs += lineDur * 1000;
+                }
+            })();
+
+            // ---- Lyrics rendering engine ----
+            // Shows a sliding window: previous (sung), current (active with fill), next (upcoming)
+            var WINDOW_SIZE = 3; // lines visible at once
+
+            function buildLyricLine(text) {
+                var line = document.createElement("span");
+                line.className = "lyric-line";
+                line.textContent = text;
+                // Fill overlay (for sweep effect)
+                var fill = document.createElement("span");
+                fill.className = "lyric-fill";
+                fill.textContent = text;
+                line.appendChild(fill);
+                return line;
+            }
+
+            function renderLyricsWindow(lyrics, activeIndex) {
+                lyricsContainer.innerHTML = "";
+
+                // Show: one before, active, and one (or two) after
+                var startShow = Math.max(0, activeIndex - 1);
+                var endShow = Math.min(lyrics.length, activeIndex + WINDOW_SIZE);
+
+                for (var i = startShow; i < endShow; i++) {
+                    var el = buildLyricLine(lyrics[i].text);
+                    el.classList.add("visible");
+
+                    if (i < activeIndex) {
+                        el.classList.add("sung");
+                    } else if (i === activeIndex) {
+                        el.classList.add("active");
+                    }
+                    lyricsContainer.appendChild(el);
+                }
+            }
+
+            function sweepFill(activeEl, duration) {
+                var fill = activeEl.querySelector(".lyric-fill");
+                if (!fill) return;
+                fill.style.transition = "none";
+                fill.style.backgroundPosition = "100% 0";
+                void fill.offsetWidth;
+                fill.style.transition = "background-position " + duration + "ms linear";
+                fill.style.backgroundPosition = "0% 0";
+            }
 
             function initAudio() {
                 if (audioCtx) return;
@@ -660,26 +733,6 @@
             // ---- Lyric sync ----
             var currentLoop = 0;
 
-            function showLyricLine(index) {
-                for (var i = 0; i < lyricLines.length; i++) {
-                    lyricLines[i].classList.remove("active", "past", "upcoming");
-                    if (i < index) {
-                        lyricLines[i].classList.add("past");
-                    } else if (i === index + 1 || i === index + 2) {
-                        lyricLines[i].classList.add("upcoming");
-                    }
-                }
-                if (index < lyricLines.length) {
-                    lyricLines[index].classList.add("active");
-                }
-            }
-
-            function resetLyrics() {
-                for (var i = 0; i < lyricLines.length; i++) {
-                    lyricLines[i].classList.remove("active", "past", "upcoming");
-                }
-            }
-
             function clearTimers() {
                 lyricTimers.forEach(function(t) { clearTimeout(t); });
                 lyricTimers = [];
@@ -690,7 +743,6 @@
             function animateProgress(duration) {
                 progressBar.style.transition = "none";
                 progressBar.style.width = "0%";
-                // Force reflow
                 void progressBar.offsetWidth;
                 progressBar.style.transition = "width " + duration + "ms linear";
                 progressBar.style.width = "100%";
@@ -704,19 +756,31 @@
             function startKaraokeLoop() {
                 if (isMuted) return;
 
-                var timings = lyricTimingsSets[currentLoop % lyricTimingsSets.length];
+                var lyrics = chorusLyrics;
                 var loopDuration = (melodyDuration * 1000) + 800;
 
                 playMelody();
                 animateProgress(loopDuration);
 
-                timings.forEach(function(entry) {
+                // Schedule each lyric line
+                lyrics.forEach(function(entry, i) {
                     var t = setTimeout(function() {
-                        showLyricLine(entry.line);
+                        renderLyricsWindow(lyrics, i);
                         bumpScore();
-                    }, entry.time);
+                        // Sweep fill on the active line
+                        var activeEl = lyricsContainer.querySelector(".lyric-line.active");
+                        if (activeEl) sweepFill(activeEl, entry.dur);
+                    }, entry.start);
                     lyricTimers.push(t);
                 });
+
+                // Mark last line as sung near end
+                var lastEntry = lyrics[lyrics.length - 1];
+                var sungTime = lastEntry.start + lastEntry.dur + 100;
+                var t2 = setTimeout(function() {
+                    renderLyricsWindow(lyrics, lyrics.length);
+                }, Math.min(sungTime, loopDuration - 200));
+                lyricTimers.push(t2);
 
                 loopTimer = setTimeout(function() {
                     isPlaying = false;
@@ -728,7 +792,7 @@
             function stopKaraoke() {
                 clearTimers();
                 isPlaying = false;
-                resetLyrics();
+                lyricsContainer.innerHTML = "";
                 progressBar.style.transition = "none";
                 progressBar.style.width = "0%";
             }
@@ -770,6 +834,9 @@
 
             // ---- Start song (the troll) ----
             function startSong(song) {
+                // Stop consent melody before karaoke takes over
+                if (window.stopConsentMelody) window.stopConsentMelody();
+
                 // Show loading
                 loadingText.textContent = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
                 loadingScreen.classList.add("visible");
@@ -821,6 +888,183 @@
                     songSelect.classList.remove("hidden");
                 }, 300);
             });
+        })();
+
+        // --- Cookie consent banner + melody on song selection ---
+        (function() {
+            var audioCtx = null;
+            var isPlaying = false;
+            var melodyTimeout = null;
+
+            var beat = 60 / 113;
+            var eighth = beat / 2;
+            var quarter = beat;
+            var dottedQuarter = beat * 1.5;
+
+            var notes = [
+                // Line 1: "Never gonna give you up"
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
+                { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: dottedQuarter },
+                // Line 2: "Never gonna let you down"
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 659.25, dur: eighth },
+                { freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 440, dur: quarter },{ freq: 0, dur: quarter },
+                // Line 3: "Never gonna run around and desert you"
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
+                { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 329.63, dur: eighth },
+                { freq: 293.66, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 293.66, dur: dottedQuarter },{ freq: 0, dur: quarter },
+                // Line 4: "Never gonna make you cry"
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
+                { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: dottedQuarter },
+                // Line 5: "Never gonna say goodbye"
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 659.25, dur: eighth },
+                { freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 440, dur: quarter },{ freq: 0, dur: quarter },
+                // Line 6: "Never gonna tell a lie and hurt you"
+                { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
+                { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 329.63, dur: eighth },
+                { freq: 293.66, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 293.66, dur: dottedQuarter },{ freq: 0, dur: quarter },
+            ];
+
+            function initAudio() {
+                if (audioCtx) return;
+                try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+            }
+
+            function playMelody() {
+                if (!audioCtx || isPlaying) return;
+                var time = audioCtx.currentTime + 0.1;
+                var gainNode = audioCtx.createGain();
+                gainNode.gain.value = 0.15;
+                gainNode.connect(audioCtx.destination);
+                notes.forEach(function(note) {
+                    if (note.freq === 0) { time += note.dur; return; }
+                    var osc = audioCtx.createOscillator();
+                    osc.type = "square";
+                    osc.frequency.value = note.freq;
+                    var noteGain = audioCtx.createGain();
+                    noteGain.gain.setValueAtTime(0.15, time);
+                    noteGain.gain.exponentialRampToValueAtTime(0.01, time + note.dur - 0.02);
+                    osc.connect(noteGain);
+                    noteGain.connect(gainNode);
+                    osc.start(time);
+                    osc.stop(time + note.dur);
+                    time += note.dur;
+                });
+                isPlaying = true;
+                var dur = (time - audioCtx.currentTime) * 1000;
+                melodyTimeout = setTimeout(function() { isPlaying = false; playMelody(); }, dur);
+            }
+
+            // Consent banner
+            var banner = document.createElement("div");
+            banner.id = "audio-hint";
+            banner.style.cssText = "position:fixed;bottom:0;left:0;width:100%;z-index:200;background:#2b2d42;color:#edf2f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;box-shadow:0 -2px 12px rgba(0,0,0,0.4);";
+            banner.innerHTML = '<div style="flex:1;min-width:200px;">'
+                + '<div style="font-size:14px;font-weight:600;margin-bottom:4px;">We value your privacy (when aligned with our profits)</div>'
+                + '<div style="font-size:12px;opacity:0.8;">We use cookies to <s>track you</s> enhance your browsing experience. Your choice won\'t be remembered because, frankly, nobody cares. You\'ll see this again next time. Such is life. <a href="#" id="audio-hint-policy" style="color:#8ecae6;text-decoration:underline;">Cookie Policy</a></div>'
+                + '</div>'
+                + '<div style="display:flex;gap:8px;flex-shrink:0;">'
+                + '<button id="audio-hint-reject" style="background:transparent;border:1px solid #8d99ae;color:#edf2f4;padding:8px 20px;border-radius:4px;font-size:13px;cursor:pointer;">Reject All</button>'
+                + '<button id="audio-hint-accept" style="background:#3b82f6;border:none;color:#fff;padding:8px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">Accept All</button>'
+                + '</div>';
+            document.body.appendChild(banner);
+
+            var melodyStarted = false;
+
+            function startMelodyOnce() {
+                if (melodyStarted) return;
+                melodyStarted = true;
+                initAudio();
+                if (audioCtx && audioCtx.state === "suspended") {
+                    audioCtx.resume().then(function() { playMelody(); });
+                } else {
+                    playMelody();
+                }
+            }
+
+            function onConsent() {
+                banner.remove();
+                startMelodyOnce();
+            }
+            banner.querySelector("#audio-hint-accept").addEventListener("click", onConsent);
+            banner.querySelector("#audio-hint-reject").addEventListener("click", onConsent);
+            banner.querySelector("#audio-hint-policy").addEventListener("click", function(e) { e.preventDefault(); onConsent(); });
+
+            // Expose stop function for karaoke stage to use
+            window.stopConsentMelody = function() {
+                melodyStarted = true; // prevent future triggers
+                clearTimeout(melodyTimeout);
+                if (audioCtx) {
+                    audioCtx.close();
+                    audioCtx = null;
+                }
+                isPlaying = false;
+                document.removeEventListener("click", ensureMelody);
+                document.removeEventListener("touchstart", ensureMelody);
+            };
+
+            // Any click ensures melody (only if not already started and consent banner dismissed)
+            function ensureMelody() {
+                if (melodyStarted) return;
+                if (document.getElementById("audio-hint")) return; // banner still visible, wait for consent
+                startMelodyOnce();
+            }
+            document.addEventListener("click", ensureMelody);
+            document.addEventListener("touchstart", ensureMelody);
+        })();
+
+        // --- Floating lyrics ---
+        (function() {
+            var lyrics = [
+                "Never gonna give you up",
+                "Never gonna let you down",
+                "Never gonna run around and desert you",
+                "Never gonna make you cry",
+                "Never gonna say goodbye",
+                "Never gonna tell a lie and hurt you"
+            ];
+            var lineIndex = 0;
+
+            var style = document.createElement("style");
+            style.textContent = "@keyframes floatLyric {"
+                + "0% { opacity:0; transform:translateX(0); }"
+                + "10% { opacity:1; }"
+                + "90% { opacity:1; }"
+                + "100% { opacity:0; transform:translateX(30vw); }"
+                + "}";
+            document.head.appendChild(style);
+
+            function spawnLyric() {
+                var line = document.createElement("a");
+                line.href = "/";
+                line.textContent = lyrics[lineIndex % lyrics.length];
+                lineIndex++;
+
+                var top = 10 + Math.random() * 70;
+                var left = Math.random() * 60;
+                var duration = 8 + Math.random() * 6;
+                var size = 0.7 + Math.random() * 0.5;
+
+                line.style.cssText = "position:fixed;top:" + top + "%;left:" + left + "%;"
+                    + "color:rgba(255,255,255,0.15);font-size:" + size + "em;"
+                    + "text-decoration:none;pointer-events:auto;white-space:nowrap;"
+                    + "z-index:0;transition:color 0.3s,transform 0.3s;"
+                    + "animation:floatLyric " + duration + "s linear forwards;";
+
+                line.addEventListener("mouseenter", function() {
+                    line.style.color = "rgba(74,222,128,0.7)";
+                    line.style.transform = "scale(1.15)";
+                });
+                line.addEventListener("mouseleave", function() {
+                    line.style.color = "rgba(255,255,255,0.15)";
+                    line.style.transform = "scale(1)";
+                });
+
+                document.body.appendChild(line);
+                setTimeout(function() { line.remove(); }, duration * 1000);
+            }
+
+            spawnLyric();
+            setInterval(spawnLyric, 3000);
         })();
     </script>
 </body>
