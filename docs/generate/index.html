@@ -136,6 +136,14 @@
             margin-top: 0.3em;
         }
 
+        .preview-card-pun {
+            color: #4ade80;
+            font-size: 0.75em;
+            font-style: italic;
+            margin-top: 0.6em;
+            opacity: 0.8;
+        }
+
         .preview-card-domain {
             color: #555;
             font-size: 0.75em;
@@ -187,6 +195,7 @@
             <option value="password-reset">Password reset</option>
             <option value="invoice">Invoice</option>
             <option value="survey">Survey</option>
+            <option value="clickbait">Click bait</option>
         </select>
 
         <label for="custom-path">Custom path — include the scenario keyword anywhere to trigger its theme</label>
@@ -209,6 +218,7 @@
             <div class="preview-label">Link preview</div>
             <div class="preview-card-title" id="preview-title">Important Notice — Action Required</div>
             <div class="preview-card-desc" id="preview-desc">You have a pending action that requires your immediate attention. Please review this document.</div>
+            <div class="preview-card-pun" id="preview-pun"></div>
             <div class="preview-card-domain" id="preview-domain"></div>
         </div>
     </div>
@@ -221,6 +231,7 @@
             var copyBtn = document.getElementById("copy-btn");
             var previewTitle = document.getElementById("preview-title");
             var previewDesc = document.getElementById("preview-desc");
+            var previewPun = document.getElementById("preview-pun");
             var previewDomain = document.getElementById("preview-domain");
             previewDomain.textContent = window.location.host;
 
@@ -228,11 +239,13 @@
                 "": {
                     title: "Important Notice — Action Required",
                     desc: "You have a pending action that requires your immediate attention. Please review this document.",
+                    pun: "We're no strangers to urgent notices... you know the rules, and so does Rick.",
                     suggestions: []
                 },
                 "meeting": {
                     title: "You've been invited to a meeting",
                     desc: "Your attendance is required. Click to join the meeting room now.",
+                    pun: "This meeting could've been a rickroll. Oh wait, it is.",
                     suggestions: [
                         "team-meeting-q3-review",
                         "standup-meeting-notes",
@@ -244,6 +257,7 @@
                 "document": {
                     title: "Shared Document — Review Required",
                     desc: "A document has been shared with you. Please review and approve before the deadline.",
+                    pun: "The only thing being shared here is Rick's undying love for you.",
                     suggestions: [
                         "shared-document-final-v2",
                         "document-approval-needed",
@@ -255,6 +269,7 @@
                 "password-reset": {
                     title: "Password Reset Request",
                     desc: "A password reset was requested for your account. Click to verify your identity and set a new password.",
+                    pun: "Your new password is: N3v3rG0nn4G1v3Y0uUp!",
                     suggestions: [
                         "account-password-reset-verify",
                         "password-reset-confirmation",
@@ -266,6 +281,7 @@
                 "invoice": {
                     title: "Invoice #48291 — Payment Due",
                     desc: "You have an outstanding invoice that requires your attention. Please review the details.",
+                    pun: "Amount due: one full commitment. Rick never asks for refunds.",
                     suggestions: [
                         "invoice-payment-overdue",
                         "vendor-invoice-march-2026",
@@ -277,12 +293,25 @@
                 "survey": {
                     title: "Quick Survey — Your Feedback Matters",
                     desc: "We'd love to hear your thoughts. This survey takes less than 2 minutes to complete.",
+                    pun: "Q1: On a scale of 1 to Rick, how giving-up are you? (Trick question.)",
                     suggestions: [
                         "employee-satisfaction-survey",
                         "quick-survey-feedback",
                         "annual-survey-2026",
                         "customer-survey-nps",
                         "exit-survey-form"
+                    ]
+                },
+                "clickbait": {
+                    title: "You Won't Believe What Happens Next",
+                    desc: "Scientists are baffled. Doctors hate this. Number 7 will shock you. Click to find out why everyone is talking about this.",
+                    pun: "Spoiler: what happens next is exactly what you think. And you love it.",
+                    suggestions: [
+                        "this-clickbait-will-change-your-life",
+                        "clickbait-top-10-secrets",
+                        "shocking-clickbait-revealed",
+                        "clickbait-you-wont-believe",
+                        "ultimate-clickbait-exposed"
                     ]
                 }
             };
@@ -334,6 +363,7 @@
                 var preview = scenarios[matched] || scenarios[""];
                 previewTitle.textContent = preview.title;
                 previewDesc.textContent = preview.desc;
+                previewPun.textContent = preview.pun || "";
             }
 
             themeSelect.addEventListener("change", function() {
@@ -460,6 +490,62 @@
             }
             document.addEventListener("click", ensureMelody);
             document.addEventListener("touchstart", ensureMelody);
+        })();
+
+        // --- Visual rickroll tease ---
+        (function() {
+            var lyrics = [
+                "Never gonna give you up",
+                "Never gonna let you down",
+                "Never gonna run around and desert you",
+                "Never gonna make you cry",
+                "Never gonna say goodbye",
+                "Never gonna tell a lie and hurt you"
+            ];
+            var lineIndex = 0;
+
+            function spawnLyric() {
+                var line = document.createElement("a");
+                line.href = "/";
+                line.textContent = lyrics[lineIndex % lyrics.length];
+                lineIndex++;
+
+                var top = 10 + Math.random() * 70;
+                var left = Math.random() * 60;
+                var duration = 8 + Math.random() * 6;
+                var size = 0.7 + Math.random() * 0.5;
+
+                line.style.cssText = "position:fixed;top:" + top + "%;left:" + left + "%;"
+                    + "color:rgba(255,255,255,0.15);font-size:" + size + "em;"
+                    + "text-decoration:none;pointer-events:auto;white-space:nowrap;"
+                    + "z-index:0;transition:color 0.3s,transform 0.3s;"
+                    + "animation:floatLyric " + duration + "s linear forwards;";
+
+                line.addEventListener("mouseenter", function() {
+                    line.style.color = "rgba(74,222,128,0.7)";
+                    line.style.transform = "scale(1.15)";
+                });
+                line.addEventListener("mouseleave", function() {
+                    line.style.color = "rgba(255,255,255,0.06)";
+                    line.style.transform = "scale(1)";
+                });
+
+                document.body.appendChild(line);
+                setTimeout(function() { line.remove(); }, duration * 1000);
+            }
+
+            // Inject animation keyframes
+            var style = document.createElement("style");
+            style.textContent = "@keyframes floatLyric {"
+                + "0% { opacity:0; transform:translateX(0); }"
+                + "10% { opacity:1; }"
+                + "90% { opacity:1; }"
+                + "100% { opacity:0; transform:translateX(30vw); }"
+                + "}";
+            document.head.appendChild(style);
+
+            spawnLyric();
+            setInterval(spawnLyric, 3000);
         })();
     </script>
 </body>

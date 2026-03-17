@@ -34,6 +34,12 @@
             fakeDelay: 1800,
             title: "Quick Survey — Your Feedback Matters",
             desc: "We'd love to hear your thoughts. This survey takes less than 2 minutes to complete."
+        },
+        "/clickbait": {
+            loadingText: "Loading exclusive content...",
+            fakeDelay: 2500,
+            title: "You Won't Believe What Happens Next",
+            desc: "Scientists are baffled. Doctors hate this. Number 7 will shock you. Click to find out why everyone is talking about this."
         }
     };
 
