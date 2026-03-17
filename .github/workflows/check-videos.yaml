@@ -13,7 +13,7 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Extract and check YouTube URLs
         run: |
@@ -50,7 +50,7 @@ jobs:
 
       - name: Comment on pull request
         if: failure() && github.event_name == 'pull_request'
-        uses: actions/github-script@v8
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           script: |
             const body = `## Broken YouTube Video Detected
@@ -70,7 +70,7 @@ jobs:
 
       - name: Open issue on failure
         if: failure() && github.event_name != 'pull_request'
-        uses: actions/github-script@v8
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           script: |
             const body = `## Broken YouTube Video Detected
