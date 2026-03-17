@@ -102,6 +102,23 @@ body {
     outline-offset: 2px;
 }
 
+.generate-link {
+    position: fixed;
+    bottom: 1em;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.8em;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.generate-link:hover,
+.generate-link:focus {
+    color: rgba(255, 255, 255, 0.8);
+}
+
 /* Fake loading overlay for themed URLs */
 .fake-loading {
     position: fixed;
