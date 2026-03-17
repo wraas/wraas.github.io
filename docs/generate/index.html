@@ -196,6 +196,7 @@
             <option value="invoice">Invoice</option>
             <option value="survey">Survey</option>
             <option value="clickbait">Click bait</option>
+            <option value="karaoke">Karaoke</option>
         </select>
 
         <label for="custom-path">Custom path — include the scenario keyword anywhere to trigger its theme</label>
@@ -313,6 +314,18 @@
                         "clickbait-you-wont-believe",
                         "ultimate-clickbait-exposed"
                     ]
+                },
+                "karaoke": {
+                    title: "Karaoke Night — Pick Your Song!",
+                    desc: "Join the party! Browse our catalog of hit songs and sing your heart out. Your mic is ready.",
+                    pun: "Plot twist: the only song in the catalog is by Rick Astley.",
+                    suggestions: [
+                        "karaoke-night-friday",
+                        "karaoke-song-request",
+                        "team-karaoke-party",
+                        "karaoke-battle-2026",
+                        "karaoke-room-booking"
+                    ]
                 }
             };
 
@@ -399,17 +412,23 @@
             var dottedQuarter = beat * 1.5;
 
             var notes = [
+                // Line 1: "Never gonna give you up"
                 { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
                 { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: dottedQuarter },
+                // Line 2: "Never gonna let you down"
                 { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 659.25, dur: eighth },
                 { freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 440, dur: quarter },{ freq: 0, dur: quarter },
+                // Line 3: "Never gonna run around and desert you"
                 { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
                 { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 329.63, dur: eighth },
                 { freq: 293.66, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 293.66, dur: dottedQuarter },{ freq: 0, dur: quarter },
+                // Line 4: "Never gonna make you cry"
                 { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
                 { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: dottedQuarter },
+                // Line 5: "Never gonna say goodbye"
                 { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 659.25, dur: eighth },
                 { freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 440, dur: quarter },{ freq: 0, dur: quarter },
+                // Line 6: "Never gonna tell a lie and hurt you"
                 { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
                 { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 329.63, dur: eighth },
                 { freq: 293.66, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 293.66, dur: dottedQuarter },{ freq: 0, dur: quarter },

@@ -40,6 +40,12 @@
             fakeDelay: 2500,
             title: "You Won't Believe What Happens Next",
             desc: "Scientists are baffled. Doctors hate this. Number 7 will shock you. Click to find out why everyone is talking about this."
+        },
+        "/karaoke": {
+            loadingText: "Warming up the mic...",
+            fakeDelay: 2000,
+            title: "Karaoke Night — Pick Your Song!",
+            desc: "Join the party! Browse our catalog of hit songs and sing your heart out. Your mic is ready."
         }
     };
 
@@ -415,7 +421,13 @@
 
         // Theme-based fake loading or direct reveal
         var theme = getTheme();
-        if (theme && !prefersReducedMotion) {
+        var isKaraoke = window.location.pathname.toLowerCase().indexOf("karaoke") !== -1
+            && window.location.pathname.indexOf("/karaoke/") !== 0;
+        if (isKaraoke && theme && !prefersReducedMotion) {
+            showFakeLoading(theme, function() {
+                window.location.href = "/karaoke/";
+            });
+        } else if (theme && !prefersReducedMotion) {
             showFakeLoading(theme, function() {
                 revealRickroll();
                 showAudioHint();
