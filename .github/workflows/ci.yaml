@@ -33,6 +33,7 @@ jobs:
             | grep -v 'wraas\.github\.io' \
             | grep -v 'youtube\.com' \
             | grep -v 'lyricsondemand\.com' \
+            | grep -v 'goatcounter\.com' \
             | sort -u)
 
           if [ -z "$urls" ]; then
