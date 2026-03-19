@@ -33,35 +33,51 @@
    <meta name="twitter:site" content="W.R.A.A.S.">
 
    <!-- Favicon -->
-   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+   <link rel="icon" type="image/x-icon" href="/favicon.ico">
+   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
    <link href="/style.css" rel="stylesheet">
    <style>
       body { overflow: auto; }
-      .container { height: auto; min-height: 100vh; }
+      .container { height: auto; min-height: 100vh; padding: 2em 1em; display: flex; align-items: center; justify-content: center; }
       .manifesto {
          position: relative;
          z-index: 2;
          max-width: 640px;
-         margin: 0 auto;
-         padding: 2em 1.5em;
+         width: 100%;
+         padding: 2.5em 2em;
          color: #e0e0e0;
          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
          text-align: center;
          background: rgba(0, 0, 0, 0.75);
          border-radius: 12px;
       }
+      .page-logo {
+         border: 2px solid #5bcefa;
+         border-radius: 12px;
+      }
+      .manifesto-header {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         gap: 1em;
+         margin-bottom: 2em;
+      }
+      .manifesto-header-text {
+         text-align: left;
+      }
       .manifesto h1 {
          font-size: clamp(1.8em, 5vw, 2.8em);
          color: #fff;
-         margin-bottom: 0.2em;
+         margin-bottom: 0.1em;
          letter-spacing: -0.02em;
       }
       .manifesto .tagline {
-         color: #4ade80;
+         color: #5bcefa;
          font-size: clamp(0.9em, 2.5vw, 1.1em);
          font-style: italic;
-         margin-bottom: 2em;
       }
       .manifesto h2 {
          font-size: 1.2em;
@@ -91,12 +107,12 @@
       .manifesto .back-link {
          display: inline-block;
          margin-top: 2em;
-         color: #4ade80;
+         color: #5bcefa;
          text-decoration: none;
          font-size: 0.9em;
          transition: color 0.2s;
       }
-      .manifesto .back-link:hover { color: #86efac; }
+      .manifesto .back-link:hover { color: #8edbfc; }
    </style>
 </head>
 
@@ -107,8 +123,16 @@
          <img class="rick-bg visible" src="/rick.gif" alt="" aria-hidden="true">
       </picture>
       <div class="manifesto" id="manifesto">
-         <h1>W.R.A.A.S.</h1>
-         <div class="tagline">We Rickroll Absolutely Anyone, Seriously.</div>
+         <div class="manifesto-header">
+            <picture>
+               <source srcset="/logo-200.webp" type="image/webp">
+               <img src="/logo-200.png" alt="W.R.A.A.S. logo" width="80" height="80" class="page-logo">
+            </picture>
+            <div class="manifesto-header-text">
+               <h1>W.R.A.A.S.</h1>
+               <div class="tagline">We Rickroll Absolutely Anyone, Seriously.</div>
+            </div>
+         </div>
 
          <h2>Origin Story</h2>
          <p>It started as a single link. One URL. One GIF. One song that would never, ever let you go. What began as a harmless prank evolved into a platform — because if you're going to rickroll someone, you might as well over-engineer it.</p>

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.png" alt="W.R.A.A.S. logo" width="200">
+</p>
+
 # W.R.A.A.S.
 
 > [!NOTE]
@@ -158,6 +162,14 @@ site/
 ├── style.css             # Styles, animations, fake loading overlay
 ├── script.js             # Reveal sequence, audio system, theme router
 ├── sw.js                 # Service worker for offline caching
+├── logo-200.webp         # W.R.A.A.S. logo (WebP, used in pages)
+├── logo-200.png          # W.R.A.A.S. logo (PNG fallback)
+├── favicon.ico           # Multi-size favicon (16/32/48px)
+├── favicon-16x16.png     # 16x16 favicon
+├── favicon-32x32.png     # 32x32 favicon
+├── apple-touch-icon.png  # 180x180 Apple touch icon
+├── android-chrome-192x192.png  # 192x192 Android icon
+├── android-chrome-512x512.png  # 512x512 Android icon
 ├── rick.gif              # Self-hosted Rick Astley GIF
 ├── rick.webp             # WebP version of the GIF
 ├── robots.txt            # The other rickroll

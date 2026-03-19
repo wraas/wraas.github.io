@@ -7,7 +7,10 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://wraas.goatcounter.com; frame-ancestors 'none';">
     <title>W.R.A.A.S. — Link Generator</title>
     <meta name="robots" content="noindex">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -22,16 +25,31 @@
             padding: 2em 1em;
         }
 
+        .page-logo {
+            border: 2px solid #5bcefa;
+            border-radius: 12px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            margin-bottom: 1.5em;
+        }
+
+        .page-header-text {
+            text-align: left;
+        }
+
         h1 {
             font-size: clamp(1.5em, 4vw, 2.2em);
-            margin-bottom: 0.3em;
+            margin-bottom: 0.1em;
             color: #fff;
             letter-spacing: -0.02em;
         }
 
         .subtitle {
             color: #888;
-            margin-bottom: 2em;
             font-size: 1em;
         }
 
@@ -67,7 +85,7 @@
         }
 
         select:focus, input:focus {
-            border-color: #1a73e8;
+            border-color: #5bcefa;
         }
 
         .output-group {
@@ -93,7 +111,7 @@
             background: #0a0a0a;
             border: 1px solid #333;
             border-radius: 8px;
-            color: #4ade80;
+            color: #5bcefa;
             font-family: monospace;
             font-size: 0.95em;
             word-break: break-all;
@@ -103,7 +121,7 @@
 
         .copy-btn {
             padding: 0.7em 1.2em;
-            background: #1a73e8;
+            background: #5bcefa;
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -181,7 +199,7 @@
         }
 
         .preview-card-pun {
-            color: #4ade80;
+            color: #5bcefa;
             font-size: 0.75em;
             font-style: italic;
             margin-top: 0.6em;
@@ -214,8 +232,8 @@
         }
 
         .suggestion-chip:hover {
-            background: #1a73e8;
-            border-color: #1a73e8;
+            background: #5bcefa;
+            border-color: #5bcefa;
             color: #fff;
         }
 
@@ -227,8 +245,16 @@
 </head>
 
 <body>
-    <h1>W.R.A.A.S.</h1>
-    <p class="subtitle">We Rickroll Absolutely Anyone, Seriously. Generate your weapon of choice.</p>
+    <div class="page-header">
+        <picture>
+            <source srcset="/logo-200.webp" type="image/webp">
+            <img src="/logo-200.png" alt="W.R.A.A.S. logo" width="70" height="70" class="page-logo">
+        </picture>
+        <div class="page-header-text">
+            <h1>W.R.A.A.S.</h1>
+            <p class="subtitle">Generate your weapon of choice.</p>
+        </div>
+    </div>
 
     <div class="generator">
         <label for="theme">Scenario</label>
@@ -815,7 +841,7 @@
                     + '</div>'
                     + '<div style="display:flex;gap:8px;flex-shrink:0;">'
                     + '<button id="audio-hint-reject" style="background:transparent;border:1px solid #8d99ae;color:#edf2f4;padding:8px 20px;border-radius:4px;font-size:13px;cursor:pointer;">Reject All</button>'
-                    + '<button id="audio-hint-accept" style="background:#3b82f6;border:none;color:#fff;padding:8px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">Accept All</button>'
+                    + '<button id="audio-hint-accept" style="background:#5bcefa;border:none;color:#fff;padding:8px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">Accept All</button>'
                     + '</div>';
                 document.body.appendChild(banner);
                 function onConsent() {

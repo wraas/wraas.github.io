@@ -7,7 +7,10 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://wraas.goatcounter.com; frame-ancestors 'none';">
     <title>W.R.A.A.S. Karaoke</title>
     <meta name="robots" content="noindex">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎤</text></svg>">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -35,6 +38,22 @@
             position: absolute;
         }
 
+        .page-logo {
+            border: 2px solid #5bcefa;
+            border-radius: 12px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            margin-bottom: 0.8em;
+        }
+
+        .page-header-text {
+            text-align: left;
+        }
+
         .logo {
             font-size: clamp(1.5em, 4vw, 2.2em);
             font-weight: 800;
@@ -45,7 +64,6 @@
 
         .tagline {
             color: #888;
-            margin-bottom: 0.8em;
             font-size: 1em;
         }
 
@@ -68,7 +86,7 @@
             transition: border-color 0.2s;
         }
 
-        .search-bar:focus { border-color: #1a73e8; }
+        .search-bar:focus { border-color: #5bcefa; }
 
         .search-icon {
             position: absolute;
@@ -111,7 +129,7 @@
         }
 
         .song-card:hover, .song-card:focus {
-            border-color: #4ade80;
+            border-color: #5bcefa;
             transform: translateY(-2px);
             background: #1a1a1a;
             outline: none;
@@ -144,7 +162,7 @@
             color: #666;
         }
 
-        .song-tag.difficulty-easy { color: #4ade80; background: rgba(74, 222, 128, 0.1); }
+        .song-tag.difficulty-easy { color: #5bcefa; background: rgba(91, 206, 250, 0.1); }
         .song-tag.difficulty-medium { color: #facc15; background: rgba(250, 204, 21, 0.1); }
         .song-tag.difficulty-hard { color: #f87171; background: rgba(248, 113, 113, 0.1); }
         .song-tag.difficulty-legendary { color: #facc15; background: rgba(250, 204, 21, 0.15); text-transform: uppercase; letter-spacing: 0.05em; }
@@ -154,7 +172,7 @@
             right: 1em;
             top: 50%;
             transform: translateY(-50%);
-            color: #4ade80;
+            color: #5bcefa;
             font-size: 0.8em;
             font-weight: 600;
             opacity: 0;
@@ -194,7 +212,7 @@
             width: 40px;
             height: 40px;
             border: 3px solid #222;
-            border-top-color: #4ade80;
+            border-top-color: #5bcefa;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
         }
@@ -239,11 +257,11 @@
             top: 0;
             left: 0;
             height: 3px;
-            background: #4ade80;
+            background: #5bcefa;
             z-index: 60;
             width: 0%;
             transition: width linear;
-            box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+            box-shadow: 0 0 8px rgba(91, 206, 250, 0.5);
         }
 
         /* Song info banner */
@@ -264,7 +282,7 @@
             font-size: 0.7em;
             text-transform: uppercase;
             letter-spacing: 0.15em;
-            color: #4ade80;
+            color: #5bcefa;
             margin-bottom: 0.3em;
         }
 
@@ -329,13 +347,13 @@
             color: transparent;
             -webkit-background-clip: text;
             background-clip: text;
-            background-image: linear-gradient(to right, #4ade80 50%, transparent 50%);
+            background-image: linear-gradient(to right, #5bcefa 50%, transparent 50%);
             background-size: 200% 100%;
             background-position: 100% 0;
             text-shadow: none;
             pointer-events: none;
             transition: background-position linear;
-            filter: drop-shadow(0 0 12px rgba(74, 222, 128, 0.5));
+            filter: drop-shadow(0 0 12px rgba(91, 206, 250, 0.5));
         }
 
         /* Mute button */
@@ -418,8 +436,8 @@
         .score-value {
             font-size: 1.8em;
             font-weight: 800;
-            color: #4ade80;
-            text-shadow: 0 0 12px rgba(74, 222, 128, 0.3);
+            color: #5bcefa;
+            text-shadow: 0 0 12px rgba(91, 206, 250, 0.3);
         }
 
 @media (prefers-reduced-motion: reduce) {
@@ -438,8 +456,16 @@
 <body>
     <!-- Song Selection Screen -->
     <div class="song-select" id="song-select">
-        <div class="logo">W.R.A.A.S. Karaoke</div>
-        <p class="tagline">We kaRaoke Any Artist, Seriously.</p>
+        <div class="page-header">
+            <picture>
+                <source srcset="/logo-200.webp" type="image/webp">
+                <img src="/logo-200.png" alt="W.R.A.A.S. logo" width="70" height="70" class="page-logo">
+            </picture>
+            <div class="page-header-text">
+                <div class="logo">W.R.A.A.S. Karaoke</div>
+                <p class="tagline">We kaRaoke Any Artist, Seriously.</p>
+            </div>
+        </div>
 
         <div class="search-wrap">
             <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

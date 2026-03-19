@@ -450,7 +450,7 @@
             + '</div>'
             + '<div style="display:flex;gap:8px;flex-shrink:0;">'
             + '<button id="audio-hint-reject" style="background:transparent;border:1px solid #8d99ae;color:#edf2f4;padding:8px 20px;border-radius:4px;font-size:13px;cursor:pointer;">Reject All</button>'
-            + '<button id="audio-hint-accept" style="background:#3b82f6;border:none;color:#fff;padding:8px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">Accept All</button>'
+            + '<button id="audio-hint-accept" style="background:#5bcefa;border:none;color:#fff;padding:8px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">Accept All</button>'
             + '</div>';
         document.body.appendChild(banner);
         // Both buttons start the melody
@@ -519,10 +519,10 @@
         var link = document.createElement("a");
         link.href = "/generate/";
         link.textContent = "Create a new rickroll link";
-        link.style.cssText = "display:inline-block;padding:0.8em 1.6em;background:#3b82f6;color:#fff;" +
+        link.style.cssText = "display:inline-block;padding:0.8em 1.6em;background:#5bcefa;color:#fff;" +
             "text-decoration:none;border-radius:8px;font-weight:600;transition:background 0.2s;";
-        link.addEventListener("mouseover", function() { link.style.background = "#1d4ed8"; });
-        link.addEventListener("mouseout", function() { link.style.background = "#3b82f6"; });
+        link.addEventListener("mouseover", function() { link.style.background = "#3aadd9"; });
+        link.addEventListener("mouseout", function() { link.style.background = "#5bcefa"; });
 
         expired.appendChild(title);
         expired.appendChild(subtitle);
