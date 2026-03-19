@@ -72,6 +72,7 @@ Every URL on `wraas.github.io` is a rickroll. The root path, any subpath, any ty
 - Iconic chorus lyrics fading in line by line with a dramatic reveal sequence (600ms initial delay, 300ms per line)
 - Synthesized melody of "Never Gonna Give You Up" plays automatically on first click/tap via the Web Audio API
 - Mute/unmute toggle button with animated speaker icon
+- Browser tab title cycles through lyrics every 3 seconds
 
 ### Disguised Link Previews
 
@@ -106,6 +107,7 @@ Visit **[wraas.github.io/generate](https://wraas.github.io/generate)** to create
 - Pick a themed scenario or use a custom path
 - One-click copy to clipboard
 - Live preview of how the link will appear when shared
+- QR code generated inline — save as PNG for printing or sharing
 
 The generator page itself is excluded from search engines via `noindex`.
 

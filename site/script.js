@@ -432,6 +432,16 @@
         document.addEventListener("click", ensureMelody);
         document.addEventListener("touchstart", ensureMelody);
 
+        // Tab title rotation — cycle lyrics in the browser tab
+        var lyricsLines = document.querySelectorAll(".lyrics-line");
+        if (lyricsLines.length) {
+            var titleIndex = 0;
+            setInterval(function() {
+                document.title = lyricsLines[titleIndex % lyricsLines.length].textContent;
+                titleIndex++;
+            }, 3000);
+        }
+
         // Theme-based fake loading or direct reveal
         var theme = getTheme();
         var isKaraoke = window.location.pathname.toLowerCase().indexOf("karaoke") !== -1
