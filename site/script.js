@@ -153,6 +153,102 @@
         var dismissTimer = setTimeout(dismiss, theme.fakeDelay);
     }
 
+    function detectBlockers() {
+        var blockerDetected = false;
+        var detectionReasons = [];
+
+        // Check if GIF loaded successfully
+        var gifImg = document.querySelector(".rick-bg");
+        if (gifImg) {
+            var imgTimeout = new Promise(function(resolve) {
+                setTimeout(function() {
+                    if (gifImg.naturalWidth === 0 || gifImg.naturalHeight === 0) {
+                        if (gifImg.complete) {
+                            blockerDetected = true;
+                            detectionReasons.push("GIF failed to load");
+                        }
+                    }
+                    resolve();
+                }, 2000);
+            });
+        }
+
+        // Check if Web Audio API is available but blocked
+        try {
+            var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (!audioCtx) {
+                blockerDetected = true;
+                detectionReasons.push("Web Audio API blocked");
+            }
+        } catch (e) {
+            blockerDetected = true;
+            detectionReasons.push("Web Audio API error: " + e.message);
+        }
+
+        // Check for blocker extension markers in the DOM
+        var blockerMarkers = [
+            "rickroll-blocker",
+            "rickroll-defense",
+            "youtube-video-blocker",
+            "content-blocker",
+            "_extension_",
+            "chrome-extension",
+            "moz-extension"
+        ];
+
+        blockerMarkers.forEach(function(marker) {
+            if (document.querySelector("[id*='" + marker + "']") ||
+                document.querySelector("[class*='" + marker + "']")) {
+                blockerDetected = true;
+                detectionReasons.push("Blocker marker detected: " + marker);
+            }
+        });
+
+        return { detected: blockerDetected, reasons: detectionReasons };
+    }
+
+    function showBlockerAlternative() {
+        var container = document.querySelector(".container");
+        if (!container) return;
+
+        // Create gradient background
+        var style = document.createElement("style");
+        style.textContent = "@keyframes gradientShift {" +
+            "0% { background-position: 0% 50%; }" +
+            "50% { background-position: 100% 50%; }" +
+            "100% { background-position: 0% 50%; }" +
+            "}" +
+            ".blocker-alternative { " +
+            "background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%) !important; " +
+            "background-size: 400% 400%; " +
+            "animation: gradientShift 8s ease infinite; " +
+            "}" +
+            ".blocker-notice { " +
+            "animation: pulse 2s ease-in-out infinite; " +
+            "}";
+        document.head.appendChild(style);
+
+        container.classList.add("blocker-alternative");
+
+        // Hide GIF and update lyrics
+        var bg = document.querySelector(".rick-bg");
+        if (bg) bg.style.display = "none";
+
+        var lyrics = document.querySelectorAll(".lyrics-line");
+        lyrics.forEach(function(line) {
+            line.classList.add("visible");
+            line.classList.add("blocker-notice");
+        });
+
+        // Add notice
+        var notice = document.createElement("div");
+        notice.style.cssText = "position:fixed;bottom:2em;left:50%;transform:translateX(-50%);z-index:3;" +
+            "background:rgba(0,0,0,0.7);color:#fff;padding:1em 1.5em;border-radius:8px;" +
+            "font-size:0.85em;text-align:center;max-width:300px;font-family:monospace;";
+        notice.textContent = "It seems you have excellent taste in browser extensions. But you can't escape Rick.";
+        document.body.appendChild(notice);
+    }
+
     function revealRickroll() {
         var bg = document.querySelector(".rick-bg");
         if (bg) bg.classList.add("visible");
@@ -382,8 +478,76 @@
         });
     }
 
+    // --- Link expiration check ---
+    function checkLinkExpiration() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var expiresParam = urlParams.get("expires");
+        if (expiresParam) {
+            var expiresAt = parseInt(expiresParam, 10);
+            var now = Math.floor(Date.now() / 1000);
+            if (now > expiresAt) {
+                return true; // Link has expired
+            }
+        }
+        return false;
+    }
+
+    function showExpiredPage() {
+        var container = document.querySelector(".container");
+        if (!container) {
+            container = document.createElement("div");
+            document.body.appendChild(container);
+        }
+
+        // Clear existing content
+        container.innerHTML = "";
+
+        // Create expired page
+        var expired = document.createElement("div");
+        expired.style.cssText = "display:flex;flex-direction:column;align-items:center;justify-content:center;" +
+            "width:100%;height:100vh;background:#fff;color:#333;font-family:-apple-system,BlinkMacSystemFont," +
+            "'Segoe UI',Roboto,sans-serif;text-align:center;padding:2em;";
+
+        var title = document.createElement("h1");
+        title.textContent = "This link has expired.";
+        title.style.cssText = "font-size:2.5em;margin-bottom:0.5em;color:#333;";
+
+        var subtitle = document.createElement("p");
+        subtitle.textContent = "The rickroll window has closed. Better luck next time.";
+        subtitle.style.cssText = "font-size:1.1em;color:#666;margin-bottom:2em;max-width:500px;";
+
+        var link = document.createElement("a");
+        link.href = "/generate/";
+        link.textContent = "Create a new rickroll link";
+        link.style.cssText = "display:inline-block;padding:0.8em 1.6em;background:#3b82f6;color:#fff;" +
+            "text-decoration:none;border-radius:8px;font-weight:600;transition:background 0.2s;";
+        link.addEventListener("mouseover", function() { link.style.background = "#1d4ed8"; });
+        link.addEventListener("mouseout", function() { link.style.background = "#3b82f6"; });
+
+        expired.appendChild(title);
+        expired.appendChild(subtitle);
+        expired.appendChild(link);
+        container.appendChild(expired);
+
+        // Hide all other content
+        var bg = document.querySelector(".rick-bg");
+        if (bg) bg.style.display = "none";
+        var lyrics = document.querySelector(".lyrics");
+        if (lyrics) lyrics.style.display = "none";
+        var muteBtn = document.querySelector(".mute-btn");
+        if (muteBtn) muteBtn.style.display = "none";
+        var bottomLinks = document.querySelector(".bottom-links");
+        if (bottomLinks) bottomLinks.style.display = "none";
+    }
+
     // --- Init ---
     document.addEventListener("DOMContentLoaded", function() {
+        // Check for link expiration first
+        if (checkLinkExpiration()) {
+            showExpiredPage();
+            return;
+        }
+
         // --- Developer easter eggs in the console ---
         console.log("%c" + [
             " ____  _      _             _ _          _ ",
@@ -465,11 +629,32 @@
         } else if (theme && !prefersReducedMotion) {
             showFakeLoading(theme, function() {
                 revealRickroll();
+                // Check for rickroll blockers after reveal
+                setTimeout(function() {
+                    var blockerCheck = detectBlockers();
+                    if (blockerCheck.detected) {
+                        trackEvent("blocker-detected", "Rickroll blocker detected");
+                        showBlockerAlternative();
+                    }
+                }, 1000);
                 showAudioHint();
             });
         } else {
             revealRickroll();
+            // Check for rickroll blockers after reveal
+            setTimeout(function() {
+                var blockerCheck = detectBlockers();
+                if (blockerCheck.detected) {
+                    trackEvent("blocker-detected", "Rickroll blocker detected");
+                    showBlockerAlternative();
+                }
+            }, 1000);
             showAudioHint();
+        }
+
+        // Register service worker for offline support
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(function() {});
         }
     });
 })();
