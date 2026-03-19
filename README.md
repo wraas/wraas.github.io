@@ -130,6 +130,7 @@ Five GitHub Actions workflows keep the rickroll alive:
 
 - **CI** — Runs on every PR and push to `main`. Lints HTML, CSS, and JS via `just lint`, checks that critical external URLs are reachable, and validates OG metadata on the rickroll pages. Comments on the PR with details if anything fails.
 - **Check robots.txt** — Validates `robots.txt` syntax on every PR that modifies it. Ensures directives are valid, every `Allow`/`Disallow` has a preceding `User-agent`, and the catch-all `User-agent: *` rule exists.
+- **Check SRI Hash** — Runs daily. Verifies the GoatCounter `count.js` SRI integrity hash is still valid and opens a PR to update it if it has changed.
 - **Lighthouse CI** — Audits performance, accessibility, best practices, and SEO on every PR and push to `main`. Comments scores on the PR; all categories must score 90+.
 - **Broken Links** — Runs weekly and on push to `main`. Checks all links in `site/` and auto-creates an issue if any are broken.
 - **Preview Build** — Builds the site on every PR and uploads the artifact for local preview.
@@ -174,8 +175,9 @@ site/
     └── karaoke.js        # Karaoke page JavaScript module
 
 .github/workflows/
-├── ci.yaml               # Lint, external URL checks, OG validation
 ├── check-robots-txt.yaml # robots.txt syntax validation on PR
+├── check-sri.yaml        # Daily GoatCounter SRI hash verification
+├── ci.yaml               # Lint, external URL checks, OG validation
 ├── deploy.yaml           # GitHub Pages deployment
 ├── lighthouse.yaml       # Lighthouse performance audits
 ├── links.yaml            # Broken link checker
@@ -186,13 +188,16 @@ docs/
 │   └── first-theme.md            # End-to-end tutorial for new contributors
 ├── how-to/
 │   ├── add-a-theme.md            # Add a themed scenario
+│   ├── debug-ci-failures.md      # Diagnose and fix CI failures
 │   ├── run-locally.md            # Set up the dev environment
 │   ├── run-tests.md              # Run the test suite
 │   └── submit-a-pr.md            # Open a pull request
 ├── explanation/
 │   ├── architecture.md           # How the rickroll pipeline works
-│   └── image-formats.md          # Why both GIF and WebP
+│   ├── image-formats.md          # Why both GIF and WebP
+│   └── sri-and-supply-chain.md   # SRI trade-offs for third-party scripts
 └── reference/
+    ├── ci-workflows.md           # GitHub Actions workflow reference
     ├── test-suite.md             # Test catalog, coverage, and timing
     └── theme-configuration.md    # Theme object fields and constraints
 ```
