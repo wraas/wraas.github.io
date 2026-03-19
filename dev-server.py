@@ -11,6 +11,12 @@ from functools import partial
 
 
 class GitHubPagesHandler(http.server.SimpleHTTPRequestHandler):
+    def end_headers(self):
+        self.send_header("X-Rickroll", "Never-Gonna-Give-You-Up")
+        self.send_header("X-Song-BPM", "113")
+        self.send_header("X-Lyrics", "You know the rules and so do I")
+        super().end_headers()
+
     def send_error(self, code, message=None, explain=None):
         if code == 404:
             self.send_custom_404()

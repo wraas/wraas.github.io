@@ -23,8 +23,8 @@ Disallow: /and-hurt-you
 User-agent: *
 Allow: /
 Disallow: /your-commitment-to-a-full-scrape
-# 143 BPM — the tempo of love
-Crawl-delay: 143
+# 113 BPM — the tempo of love
+Crawl-delay: 113
 
 # Sitemaps are full of love
 Sitemap: https://www.youtube.com/watch?v=dQw4w9WgXcQ

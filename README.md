@@ -8,6 +8,60 @@ Send someone a link. Any link. They all lead to Rick.
 
 ---
 
+## Usage
+
+### Send a rickroll
+
+Pick any URL on `wraas.github.io` and send it to your target:
+
+1. **Quick** — Send `https://wraas.github.io` directly. It works, but the domain is suspicious.
+2. **Themed** — Use a path like `https://wraas.github.io/meeting` or `https://wraas.github.io/invoice` for a fake loading screen that sells the deception.
+3. **Custom** — Use the [link generator](https://wraas.github.io/generate) to pick a scenario and copy a ready-to-share link.
+
+Any path that doesn't match a themed scenario goes straight to Rick — so `https://wraas.github.io/quarterly-report` works just as well.
+
+### Run locally
+
+Prerequisites: Python 3 and [just](https://github.com/casey/just).
+
+```sh
+just dev
+```
+
+This starts a local server at `http://localhost:8000` that mimics GitHub Pages 404 behavior (all unknown paths serve `404.html`).
+
+To verify the developer easter eggs:
+
+```sh
+# Check custom HTTP headers
+curl -I http://localhost:8000
+
+# Check humans.txt
+curl http://localhost:8000/humans.txt
+
+# Check security.txt
+curl http://localhost:8000/.well-known/security.txt
+```
+
+Then open `http://localhost:8000` in a browser and check the DevTools console for ASCII art.
+
+### Add a themed scenario
+
+Add an entry to the `themes` object in `site/script.js`:
+
+```js
+"/your-path": {
+    loadingText: "Your loading message...",
+    fakeDelay: 2000,
+    title: "Browser Tab Title",
+    desc: "Description for OG meta tag."
+}
+```
+
+The path is matched against the URL, so `/your-path` triggers on `https://wraas.github.io/your-path`. Keyword matching also works — if the URL contains the keyword anywhere, the theme activates.
+
+---
+
 ## Features
 
 ### The Rickroll
@@ -84,7 +138,18 @@ Disallow: /never-gonna-make-you-cry
 Disallow: /never-gonna-say-goodbye
 ```
 
-The sitemap points to the YouTube video. The `Crawl-delay` is set to `143` — the BPM of "Never Gonna Give You Up."
+The sitemap points to the YouTube video. The `Crawl-delay` is set to `113` — the BPM of "Never Gonna Give You Up."
+
+### Developer Easter Eggs
+
+Developers who inspect the site get rickrolled too:
+
+- **Browser console** — Opening DevTools reveals ASCII art, a styled "Never Gonna Give You Up" banner, and a `console.warn` with lyrics
+- **View source** — Both `index.html` and `404.html` contain a large ASCII art comment with "Never Gonna Give You Up" in the `<head>`
+- **CSS source** — `style.css` opens with a "Style Guide" comment where every rule is a lyric
+- **HTTP headers** — The dev server adds `X-Rickroll`, `X-Song-BPM`, and `X-Lyrics` headers to every response (visible via `curl -I` or the Network tab)
+- **[`/humans.txt`](https://wraas.github.io/humans.txt)** — Standard `humans.txt` format listing Rick Astley as the team
+- **[`/.well-known/security.txt`](https://wraas.github.io/.well-known/security.txt)** — Security contact points to the YouTube video
 
 ### CI/CD
 
@@ -116,8 +181,11 @@ site/
 ├── style.css             # Styles, animations, fake loading overlay
 ├── script.js             # Reveal sequence, audio system, theme router
 ├── robots.txt            # The other rickroll
+├── humans.txt            # Rickrolled humans.txt
 ├── og-image.png          # Social media preview image
 ├── og-image.svg          # Source SVG for the OG image
+├── .well-known/
+│   └── security.txt      # Rickrolled security.txt
 ├── generate/
 │   └── index.html        # Link disguise generator tool
 └── karaoke/

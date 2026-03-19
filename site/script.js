@@ -370,6 +370,19 @@
 
     // --- Init ---
     document.addEventListener("DOMContentLoaded", function() {
+        // --- Developer easter eggs in the console ---
+        console.log("%c" + [
+            " ____  _      _             _ _          _ ",
+            "|  _ \\(_) ___| | ___ __ ___| | | ___  __| |",
+            "| |_) | |/ __| |/ / '__/ _ \\ | |/ _ \\/ _` |",
+            "|  _ <| | (__|   <| | | (_) | | |  __/ (_| |",
+            "|_| \\_\\_|\\___|_|\\_\\_|  \\___/|_|_|\\___|\\__,_|"
+        ].join("\n"), "color: #e74c3c; font-size: 14px; font-family: monospace;");
+        console.log(
+            "%cNever Gonna Give You Up",
+            "color: #ff6b35; font-size: 32px; font-weight: bold; text-shadow: 2px 2px 0 #c0392b;"
+        );
+        console.warn("You know the rules and so do I.");
         var muteBtn = document.querySelector(".mute-btn");
 
         if (muteBtn) {
