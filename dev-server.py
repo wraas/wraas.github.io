@@ -1,7 +1,7 @@
 """Local dev server that mimics GitHub Pages 404 behavior.
 
 Any request for a path that doesn't match a file or directory index
-serves docs/404.html, just like GitHub Pages does.
+serves site/404.html, just like GitHub Pages does.
 """
 
 import http.server
@@ -33,7 +33,7 @@ class GitHubPagesHandler(http.server.SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
-    directory = sys.argv[2] if len(sys.argv) > 2 else "docs"
+    directory = sys.argv[2] if len(sys.argv) > 2 else "site"
 
     handler = partial(GitHubPagesHandler, directory=os.path.abspath(directory))
 

@@ -3,7 +3,7 @@ name: Check robots.txt
 on:
   pull_request:
     paths:
-      - 'docs/robots.txt'
+      - 'site/robots.txt'
 
 jobs:
   check-robots-txt:
@@ -18,9 +18,9 @@ jobs:
           errors=""
 
           # Check file exists
-          if [ ! -f docs/robots.txt ]; then
-            echo "docs/robots.txt not found"
-            echo "ERRORS=- docs/robots.txt file is missing" >> "$GITHUB_ENV"
+          if [ ! -f site/robots.txt ]; then
+            echo "site/robots.txt not found"
+            echo "ERRORS=- site/robots.txt file is missing" >> "$GITHUB_ENV"
             exit 1
           fi
 
@@ -64,10 +64,10 @@ jobs:
                 errors="${errors}- Line ${line_num}: Unknown directive \`${directive}\`\n"
                 ;;
             esac
-          done < docs/robots.txt
+          done < site/robots.txt
 
           # Check for catch-all user-agent rule
-          if ! grep -qi '^User-agent:[[:space:]]*\*' docs/robots.txt; then
+          if ! grep -qi '^User-agent:[[:space:]]*\*' site/robots.txt; then
             errors="${errors}- Missing catch-all \`User-agent: *\` rule\n"
           fi
 

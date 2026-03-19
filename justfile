@@ -1,6 +1,6 @@
 # W.R.A.A.S. — justfile
 
-src := "docs"
+src := "site"
 out := "_site"
 port := "8000"
 

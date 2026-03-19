@@ -90,7 +90,7 @@ The sitemap points to the YouTube video. The `Crawl-delay` is set to `143` — t
 
 Two GitHub Actions workflows keep the rickroll alive:
 
-- **Check YouTube Videos** — Runs daily at 08:00 UTC and on every PR. Extracts all YouTube URLs from `docs/`, checks their availability via oEmbed API and playability status. Opens an issue or comments on the PR if a video goes down.
+- **Check YouTube Videos** — Runs daily at 08:00 UTC and on every PR. Extracts all YouTube URLs from `site/`, checks their availability via oEmbed API and playability status. Opens an issue or comments on the PR if a video goes down.
 - **Check robots.txt** — Validates `robots.txt` syntax on every PR that modifies it. Ensures directives are valid, every `Allow`/`Disallow` has a preceding `User-agent`, and the catch-all `User-agent: *` rule exists.
 
 ### Analytics
@@ -110,7 +110,7 @@ Page views and mute button clicks are tracked via [GoatCounter](https://www.goat
 ## File Structure
 
 ```
-docs/
+site/
 ├── 404.html              # The rickroll (served for all unknown paths)
 ├── index.html            # The rickroll (served for the root path)
 ├── style.css             # Styles, animations, fake loading overlay

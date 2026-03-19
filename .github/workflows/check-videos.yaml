@@ -17,7 +17,7 @@ jobs:
 
       - name: Extract and check YouTube URLs
         run: |
-          urls=$(grep -roEh 'https://www\.youtube\.com/(watch\?v=|embed/)[^"'"'"' ]*' docs/ || true)
+          urls=$(grep -roEh 'https://www\.youtube\.com/(watch\?v=|embed/)[^"'"'"' ]*' site/ || true)
 
           if [ -z "$urls" ]; then
             echo "No YouTube URLs found"
@@ -26,7 +26,7 @@ jobs:
 
           failed=""
           while IFS= read -r url; do
-            file=$(grep -rl "$url" docs/)
+            file=$(grep -rl "$url" site/)
             # Extract video ID from both /watch?v=ID and /embed/ID formats
             video_id=$(echo "$url" | grep -oE '(v=|embed/)([^&?]*)' | sed 's/^v=//;s/^embed\///')
             # Check oEmbed API for removed/private videos
