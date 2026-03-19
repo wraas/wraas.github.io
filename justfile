@@ -36,7 +36,7 @@ cache-bust:
         fi
     done
 
-    @echo "Cache-busting applied (CSS: ?v=${css_hash}, JS: ?v=${js_hash})"
+    echo "Cache-busting applied (CSS: ?v=${css_hash}, JS: ?v=${js_hash})"
 
 # Remove build artifacts
 clean:
@@ -147,8 +147,28 @@ lint-docs:
     fi
     echo "Docs: ok"
 
-# Run all checks (lint + build)
-check: lint lint-docs build
+# Run unit tests (Playwright-based)
+test-unit: build
+    npx playwright test tests/unit
+
+# Run end-to-end tests
+test-e2e: build
+    npx playwright test tests/e2e
+
+# Run accessibility tests
+test-a11y: build
+    npx playwright test tests/a11y
+
+# Run visual tests
+test-visual: build
+    npx playwright test tests/visual
+
+# Run all tests (unit + e2e + a11y)
+test: build
+    npx playwright test tests/unit tests/e2e tests/a11y
+
+# Run all checks (lint + build + tests)
+check: lint lint-docs build test
     @echo "All checks passed"
 
 # Serve the built site (from _site/, mimics GitHub Pages 404 behavior)
