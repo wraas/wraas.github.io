@@ -1,0 +1,24 @@
+# Normalize line endings
+* text=auto
+
+# Source files
+*.html text
+*.css  text
+*.js   text
+*.json text
+*.md   text
+*.yml  text
+*.yaml text
+*.py   text
+*.txt  text
+
+# Binary files
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.avif binary
+*.ico  binary
+*.woff binary
+*.woff2 binary
