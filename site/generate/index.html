@@ -124,6 +124,49 @@
             border-radius: 8px;
         }
 
+        .preview-card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+
+        @media (min-width: 540px) {
+            .preview-card-body {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .preview-card-text { flex: 1; }
+        }
+
+        .qr-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5em;
+        }
+
+        .qr-canvas {
+            background: #fff;
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        .qr-download {
+            padding: 0.3em 0.8em;
+            background: transparent;
+            border: none;
+            color: #555;
+            font-size: 0.75em;
+            cursor: pointer;
+            transition: color 0.2s;
+            text-decoration: underline;
+        }
+
+        .qr-download:hover {
+            color: #aaa;
+        }
+
         .preview-card-title {
             font-weight: 700;
             color: #fff;
@@ -216,14 +259,264 @@
         </div>
 
         <div class="preview-card">
-            <div class="preview-label">Link preview</div>
-            <div class="preview-card-title" id="preview-title">Important Notice — Action Required</div>
-            <div class="preview-card-desc" id="preview-desc">You have a pending action that requires your immediate attention. Please review this document.</div>
-            <div class="preview-card-pun" id="preview-pun"></div>
-            <div class="preview-card-domain" id="preview-domain"></div>
+            <div class="preview-label">Preview</div>
+            <div class="preview-card-body">
+                <div class="preview-card-text">
+                    <div class="preview-card-title" id="preview-title">Important Notice — Action Required</div>
+                    <div class="preview-card-desc" id="preview-desc">You have a pending action that requires your immediate attention. Please review this document.</div>
+                    <div class="preview-card-pun" id="preview-pun"></div>
+                    <div class="preview-card-domain" id="preview-domain"></div>
+                </div>
+                <div class="qr-col">
+                    <canvas id="qr-canvas" class="qr-canvas" width="200" height="200"></canvas>
+                    <button class="qr-download" id="qr-download">Save as PNG</button>
+                </div>
+            </div>
         </div>
     </div>
 
+<script>
+        // --- Minimal QR Code generator (no external dependencies) ---
+        // Generates version 2-6 QR codes (Model 2) with error correction level L
+        var QR = (function() {
+            // GF(256) arithmetic for Reed-Solomon
+            var EXP = new Uint8Array(256), LOG = new Uint8Array(256);
+            (function() {
+                var v = 1;
+                for (var i = 0; i < 255; i++) {
+                    EXP[i] = v;
+                    LOG[v] = i;
+                    v = (v << 1) ^ (v & 128 ? 0x11d : 0);
+                }
+                EXP[255] = EXP[0];
+            })();
+
+            function gfMul(a, b) { return a && b ? EXP[(LOG[a] + LOG[b]) % 255] : 0; }
+
+            function rsGenPoly(n) {
+                var p = [1];
+                for (var i = 0; i < n; i++) {
+                    var next = new Array(p.length + 1);
+                    for (var j = 0; j < next.length; j++) next[j] = 0;
+                    for (var j = 0; j < p.length; j++) {
+                        next[j] ^= gfMul(p[j], EXP[i]);
+                        next[j + 1] ^= p[j];
+                    }
+                    p = next;
+                }
+                return p;
+            }
+
+            function rsEncode(data, ecLen) {
+                var gen = rsGenPoly(ecLen);
+                var msg = new Uint8Array(data.length + ecLen);
+                for (var i = 0; i < data.length; i++) msg[i] = data[i];
+                for (var i = 0; i < data.length; i++) {
+                    var coef = msg[i];
+                    if (coef) {
+                        for (var j = 0; j < gen.length; j++) {
+                            msg[i + j] ^= gfMul(gen[j], coef);
+                        }
+                    }
+                }
+                return msg.slice(data.length);
+            }
+
+            // Version info: [version, size, dataCodewords, ecCodewords]
+            var VERSIONS = [
+                [1, 21, 19, 7], [2, 25, 34, 10], [3, 29, 55, 15],
+                [4, 33, 80, 20], [5, 37, 108, 26], [6, 41, 136, 36]
+            ];
+
+            // Alignment pattern centers per version
+            var ALIGN = [[], [], [6,18], [6,22], [6,26], [6,30], [6,34]];
+
+            function selectVersion(len) {
+                // Byte mode: 4 bit mode + 8/16 bit count + data
+                for (var i = 0; i < VERSIONS.length; i++) {
+                    var countBits = i < 9 ? 8 : 16;
+                    var avail = VERSIONS[i][2] * 8;
+                    if (4 + countBits + len * 8 <= avail) return VERSIONS[i];
+                }
+                return null;
+            }
+
+            function encode(text) {
+                var data = [];
+                for (var i = 0; i < text.length; i++) data.push(text.charCodeAt(i));
+                var ver = selectVersion(data.length);
+                if (!ver) return null;
+
+                var version = ver[0], size = ver[1], dataCW = ver[2], ecCW = ver[3];
+
+                // Build bit stream: byte mode (0100) + count + data + terminator + padding
+                var bits = [];
+                function pushBits(val, len) {
+                    for (var i = len - 1; i >= 0; i--) bits.push((val >> i) & 1);
+                }
+                pushBits(4, 4); // byte mode
+                pushBits(data.length, version >= 10 ? 16 : 8);
+                for (var i = 0; i < data.length; i++) pushBits(data[i], 8);
+                pushBits(0, Math.min(4, dataCW * 8 - bits.length)); // terminator
+                while (bits.length % 8) bits.push(0); // byte align
+                var pads = [0xEC, 0x11], pi = 0;
+                while (bits.length < dataCW * 8) {
+                    pushBits(pads[pi % 2], 8);
+                    pi++;
+                }
+
+                // Convert to codewords
+                var codewords = new Uint8Array(dataCW);
+                for (var i = 0; i < dataCW; i++) {
+                    var b = 0;
+                    for (var j = 0; j < 8; j++) b = (b << 1) | bits[i * 8 + j];
+                    codewords[i] = b;
+                }
+
+                // Reed-Solomon
+                var ec = rsEncode(codewords, ecCW);
+
+                // Build module grid
+                var grid = [];
+                var reserved = [];
+                for (var r = 0; r < size; r++) {
+                    grid[r] = new Uint8Array(size);
+                    reserved[r] = new Uint8Array(size);
+                }
+
+                function setModule(r, c, val) {
+                    if (r >= 0 && r < size && c >= 0 && c < size) {
+                        grid[r][c] = val ? 1 : 0;
+                        reserved[r][c] = 1;
+                    }
+                }
+
+                // Finder patterns
+                function finderPattern(row, col) {
+                    for (var dr = -1; dr <= 7; dr++) {
+                        for (var dc = -1; dc <= 7; dc++) {
+                            var r = row + dr, c = col + dc;
+                            if (r < 0 || r >= size || c < 0 || c >= size) continue;
+                            var val = (dr >= 0 && dr <= 6 && (dc === 0 || dc === 6)) ||
+                                      (dc >= 0 && dc <= 6 && (dr === 0 || dr === 6)) ||
+                                      (dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4);
+                            setModule(r, c, val);
+                        }
+                    }
+                }
+                finderPattern(0, 0);
+                finderPattern(0, size - 7);
+                finderPattern(size - 7, 0);
+
+                // Timing patterns
+                for (var i = 8; i < size - 8; i++) {
+                    setModule(6, i, i % 2 === 0);
+                    setModule(i, 6, i % 2 === 0);
+                }
+
+                // Alignment patterns
+                var ap = ALIGN[version];
+                for (var ai = 0; ai < ap.length; ai++) {
+                    for (var aj = 0; aj < ap.length; aj++) {
+                        var ar = ap[ai], ac = ap[aj];
+                        if (reserved[ar][ac]) continue;
+                        for (var dr = -2; dr <= 2; dr++) {
+                            for (var dc = -2; dc <= 2; dc++) {
+                                setModule(ar + dr, ac + dc,
+                                    Math.abs(dr) === 2 || Math.abs(dc) === 2 || (dr === 0 && dc === 0));
+                            }
+                        }
+                    }
+                }
+
+                // Reserve format info areas
+                for (var i = 0; i < 8; i++) {
+                    if (!reserved[8]) break;
+                    if (!reserved[8][i]) { reserved[8][i] = 1; }
+                    if (!reserved[i][8]) { reserved[i][8] = 1; }
+                    if (!reserved[8][size - 1 - i]) { reserved[8][size - 1 - i] = 1; }
+                    if (!reserved[size - 1 - i][8]) { reserved[size - 1 - i][8] = 1; }
+                }
+                reserved[8][8] = 1;
+                setModule(size - 8, 8, 1); // dark module
+
+                // Place data bits
+                var allBits = [];
+                for (var i = 0; i < dataCW; i++)
+                    for (var j = 7; j >= 0; j--) allBits.push((codewords[i] >> j) & 1);
+                for (var i = 0; i < ecCW; i++)
+                    for (var j = 7; j >= 0; j--) allBits.push((ec[i] >> j) & 1);
+
+                var bi = 0;
+                var upward = true;
+                for (var col = size - 1; col >= 0; col -= 2) {
+                    if (col === 6) col = 5; // skip timing column
+                    var rows = upward ? [] : [];
+                    for (var row = 0; row < size; row++) {
+                        var r = upward ? size - 1 - row : row;
+                        for (var dc = 0; dc <= 1; dc++) {
+                            var c = col - dc;
+                            if (c < 0 || reserved[r][c]) continue;
+                            grid[r][c] = bi < allBits.length ? allBits[bi++] : 0;
+                        }
+                    }
+                    upward = !upward;
+                }
+
+                // Apply mask 0 (checkerboard) and format info
+                for (var r = 0; r < size; r++) {
+                    for (var c = 0; c < size; c++) {
+                        if (!reserved[r][c]) {
+                            if ((r + c) % 2 === 0) grid[r][c] ^= 1;
+                        }
+                    }
+                }
+
+                // Format info for L level, mask 0: 0x77C4
+                var fmt = 0x77C4;
+                var fmtBits = [];
+                for (var i = 14; i >= 0; i--) fmtBits.push((fmt >> i) & 1);
+                // Place format bits
+                var FORMAT_POS_H = [
+                    [8,0],[8,1],[8,2],[8,3],[8,4],[8,5],[8,7],[8,8],
+                    [7,8],[5,8],[4,8],[3,8],[2,8],[1,8],[0,8]
+                ];
+                var FORMAT_POS_V = [];
+                for (var i = 0; i < 7; i++) FORMAT_POS_V.push([size - 1 - i, 8]);
+                for (var i = 0; i < 8; i++) FORMAT_POS_V.push([8, size - 8 + i]);
+                for (var i = 0; i < 15; i++) {
+                    grid[FORMAT_POS_H[i][0]][FORMAT_POS_H[i][1]] = fmtBits[i];
+                    grid[FORMAT_POS_V[i][0]][FORMAT_POS_V[i][1]] = fmtBits[i];
+                }
+
+                return { grid: grid, size: size };
+            }
+
+            function render(canvas, text, pixelSize) {
+                var qr = encode(text);
+                if (!qr) return false;
+                pixelSize = pixelSize || 4;
+                var padding = 4;
+                var totalSize = (qr.size + padding * 2) * pixelSize;
+                canvas.width = totalSize;
+                canvas.height = totalSize;
+                var ctx = canvas.getContext("2d");
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, 0, totalSize, totalSize);
+                ctx.fillStyle = "#000000";
+                for (var r = 0; r < qr.size; r++) {
+                    for (var c = 0; c < qr.size; c++) {
+                        if (qr.grid[r][c]) {
+                            ctx.fillRect((c + padding) * pixelSize, (r + padding) * pixelSize, pixelSize, pixelSize);
+                        }
+                    }
+                }
+                return true;
+            }
+
+            return { render: render };
+        })();
+</script>
 <script>
         (function() {
             var themeSelect = document.getElementById("theme");
@@ -234,6 +527,8 @@
             var previewDesc = document.getElementById("preview-desc");
             var previewPun = document.getElementById("preview-pun");
             var previewDomain = document.getElementById("preview-domain");
+            var qrCanvas = document.getElementById("qr-canvas");
+            var qrDownload = document.getElementById("qr-download");
             previewDomain.textContent = window.location.host;
 
             var scenarios = {
@@ -377,6 +672,9 @@
                 previewTitle.textContent = preview.title;
                 previewDesc.textContent = preview.desc;
                 previewPun.textContent = preview.pun || "";
+
+                // Update QR code
+                QR.render(qrCanvas, url, 4);
             }
 
             themeSelect.addEventListener("change", function() {
@@ -386,6 +684,13 @@
             });
             customPath.addEventListener("input", updateUrl);
             updateUrl();
+
+            qrDownload.addEventListener("click", function() {
+                var link = document.createElement("a");
+                link.download = "rickroll-qr.png";
+                link.href = qrCanvas.toDataURL("image/png");
+                link.click();
+            });
 
             copyBtn.addEventListener("click", function() {
                 var url = outputUrl.textContent;
