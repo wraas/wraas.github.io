@@ -36,6 +36,8 @@
 
    <link href="/style.css" rel="stylesheet">
    <style>
+      body { overflow: auto; }
+      .container { height: auto; min-height: 100vh; }
       .manifesto {
          position: relative;
          z-index: 2;
@@ -45,10 +47,9 @@
          color: #e0e0e0;
          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
          text-align: center;
-         opacity: 0;
-         transition: opacity 1.2s ease;
+         background: rgba(0, 0, 0, 0.75);
+         border-radius: 12px;
       }
-      .manifesto.visible { opacity: 1; }
       .manifesto h1 {
          font-size: clamp(1.8em, 5vw, 2.8em);
          color: #fff;
@@ -70,7 +71,7 @@
       .manifesto p {
          font-size: 0.95em;
          line-height: 1.7;
-         color: #bbb;
+         color: #d4d4d4;
          margin-bottom: 1em;
       }
       .manifesto .values {
@@ -96,27 +97,11 @@
       }
       .manifesto .back-link:hover { color: #86efac; }
    </style>
-   <script src="/script.js"></script>
 </head>
 
 <body>
-   <!-- Fake loading overlay for themed URLs -->
-   <div id="fake-loading" class="fake-loading" aria-hidden="true">
-      <div id="fake-loading-text" class="fake-loading-text">Loading...</div>
-      <div class="fake-loading-spinner"></div>
-      <div id="fake-loading-actions" class="fake-loading-actions"></div>
-   </div>
-
    <main class="container">
-      <img class="rick-bg" src="https://media.giphy.com/media/Ju7l5y9osyymQ/giphy.gif" alt="" aria-hidden="true">
-      <button class="mute-btn" aria-label="Unmute audio" data-goatcounter-click="mute-btn-click" data-goatcounter-title="Mute button click">
-         <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-            <line x1="23" y1="9" x2="17" y2="15"/>
-            <line x1="17" y1="9" x2="23" y2="15"/>
-         </svg>
-      </button>
-
+      <img class="rick-bg visible" src="https://media.giphy.com/media/Ju7l5y9osyymQ/giphy.gif" alt="" aria-hidden="true">
       <div class="manifesto" id="manifesto">
          <h1>W.R.A.A.S.</h1>
          <div class="tagline">We Rickroll Absolutely Anyone, Seriously.</div>
@@ -152,19 +137,6 @@
          <a href="/" class="back-link">Back to getting rickrolled</a>
       </div>
    </main>
-   <script>
-      // Reveal manifesto after a short delay (or immediately with reduced motion)
-      (function() {
-         var manifesto = document.getElementById("manifesto");
-         if (!manifesto) return;
-         var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-         if (prefersReducedMotion) {
-            manifesto.classList.add("visible");
-         } else {
-            setTimeout(function() { manifesto.classList.add("visible"); }, 800);
-         }
-      })();
-   </script>
    <script data-goatcounter="https://wraas.goatcounter.com/count"
            async src="//gc.zgo.at/count.js"></script>
 </body>
