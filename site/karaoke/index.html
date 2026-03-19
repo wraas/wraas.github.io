@@ -491,9 +491,36 @@
 
     <button class="back-btn" id="back-btn" aria-label="Back to song selection">Back to songs</button>
 
-    <script src="karaoke.js" defer></script>
+    <script>
+    // Lazy-load karaoke module: defer heavy JS until user interaction or idle
+    (function() {
+        var loaded = false;
+        function loadKaraoke() {
+            if (loaded) return;
+            loaded = true;
+            var s = document.createElement("script");
+            s.src = "karaoke.js";
+            document.body.appendChild(s);
+        }
+        // Load on first interaction (click, key, touch)
+        ["click", "keydown", "touchstart"].forEach(function(evt) {
+            document.addEventListener(evt, loadKaraoke, { once: true });
+        });
+        // Fallback: load when browser is idle (or after 3s)
+        if ("requestIdleCallback" in window) {
+            requestIdleCallback(loadKaraoke, { timeout: 3000 });
+        } else {
+            setTimeout(loadKaraoke, 3000);
+        }
+    })();
+    </script>
+    <!-- GoatCounter analytics: SRI integrity hash pins the script to a known version.
+         If analytics stops working, the hash may be stale — the check-sri workflow
+         detects this daily and opens a PR to update it. -->
     <script data-goatcounter="https://wraas.goatcounter.com/count"
-            async src="//gc.zgo.at/count.js" crossorigin="anonymous"></script>
+            async src="//gc.zgo.at/count.js"
+            integrity="sha384-DGiREytotlUiLflu8vLo0vvfxKWn36pKPT1ZBhh3R+3vhwrS/4p3H9eys9Zr2bPQ"
+            crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -906,11 +906,13 @@
             setInterval(spawnLyric, 3000);
         })();
     </script>
-    <!-- GoatCounter script: SRI not included as third-party CDN may update.
-        For production, fetch https://gc.zgo.at/count.js, compute SHA-384, and add:
-        integrity="sha384-HASH" crossorigin="anonymous" -->
+    <!-- GoatCounter analytics: SRI integrity hash pins the script to a known version.
+         If analytics stops working, the hash may be stale — the check-sri workflow
+         detects this daily and opens a PR to update it. -->
     <script data-goatcounter="https://wraas.goatcounter.com/count"
-            async src="//gc.zgo.at/count.js" crossorigin="anonymous"></script>
+            async src="//gc.zgo.at/count.js"
+            integrity="sha384-DGiREytotlUiLflu8vLo0vvfxKWn36pKPT1ZBhh3R+3vhwrS/4p3H9eys9Zr2bPQ"
+            crossorigin="anonymous"></script>
 </body>
 
 </html>
