@@ -135,6 +135,18 @@ body {
     color: rgba(255, 255, 255, 0.8);
 }
 
+.about-link {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.8em;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.about-link:hover,
+.about-link:focus {
+    color: rgba(255, 255, 255, 0.8);
+}
+
 .karaoke-link {
     display: flex;
     align-items: center;
