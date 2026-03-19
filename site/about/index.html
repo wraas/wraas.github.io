@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<!--
+ __        __ ____      _        _     ____
+ \ \      / /|  _ \    / \      / \   / ___|
+  \ \ /\ / / | |_) |  / _ \    / _ \  \___ \
+   \ V  V /  |  _ <  / ___ \  / ___ \  ___) |
+    \_/\_/   |_| \_\/_/   \_\/_/   \_\|____/
+
+  We Rickroll Absolutely Anyone, Seriously.
+-->
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>About W.R.A.A.S. — Our Mission</title>
+   <meta name="description" content="W.R.A.A.S. — We Rickroll Absolutely Anyone, Seriously. The origin story, mission, and values behind the internet's most over-engineered rickroll.">
+
+   <!-- Open Graph / Social Media -->
+   <meta property="og:type" content="website">
+   <meta property="og:title" content="About W.R.A.A.S. — Our Mission">
+   <meta property="og:description" content="We Rickroll Absolutely Anyone, Seriously. Learn about the mission behind the internet's most over-engineered rickroll platform.">
+   <meta property="og:image" content="https://wraas.github.io/og-image.png">
+   <meta property="og:url" content="https://wraas.github.io/about/">
+   <meta property="og:site_name" content="W.R.A.A.S. — Secure Document Portal">
+
+   <!-- Twitter Card -->
+   <meta name="twitter:card" content="summary_large_image">
+   <meta name="twitter:title" content="About W.R.A.A.S. — Our Mission">
+   <meta name="twitter:description" content="We Rickroll Absolutely Anyone, Seriously. The manifesto behind the platform.">
+   <meta name="twitter:image" content="https://wraas.github.io/og-image.png">
+   <meta name="twitter:site" content="W.R.A.A.S.">
+
+   <!-- Favicon -->
+   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+
+   <link href="/style.css" rel="stylesheet">
+   <style>
+      .manifesto {
+         position: relative;
+         z-index: 2;
+         max-width: 640px;
+         margin: 0 auto;
+         padding: 2em 1.5em;
+         color: #e0e0e0;
+         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+         text-align: center;
+         opacity: 0;
+         transition: opacity 1.2s ease;
+      }
+      .manifesto.visible { opacity: 1; }
+      .manifesto h1 {
+         font-size: clamp(1.8em, 5vw, 2.8em);
+         color: #fff;
+         margin-bottom: 0.2em;
+         letter-spacing: -0.02em;
+      }
+      .manifesto .tagline {
+         color: #4ade80;
+         font-size: clamp(0.9em, 2.5vw, 1.1em);
+         font-style: italic;
+         margin-bottom: 2em;
+      }
+      .manifesto h2 {
+         font-size: 1.2em;
+         color: #fff;
+         margin-top: 1.8em;
+         margin-bottom: 0.5em;
+      }
+      .manifesto p {
+         font-size: 0.95em;
+         line-height: 1.7;
+         color: #bbb;
+         margin-bottom: 1em;
+      }
+      .manifesto .values {
+         text-align: left;
+         margin: 1.5em auto;
+         max-width: 480px;
+      }
+      .manifesto .value {
+         margin-bottom: 1em;
+      }
+      .manifesto .value strong {
+         color: #fff;
+         display: block;
+         margin-bottom: 0.2em;
+      }
+      .manifesto .back-link {
+         display: inline-block;
+         margin-top: 2em;
+         color: #4ade80;
+         text-decoration: none;
+         font-size: 0.9em;
+         transition: color 0.2s;
+      }
+      .manifesto .back-link:hover { color: #86efac; }
+   </style>
+   <script src="/script.js"></script>
+</head>
+
+<body>
+   <!-- Fake loading overlay for themed URLs -->
+   <div id="fake-loading" class="fake-loading" aria-hidden="true">
+      <div id="fake-loading-text" class="fake-loading-text">Loading...</div>
+      <div class="fake-loading-spinner"></div>
+      <div id="fake-loading-actions" class="fake-loading-actions"></div>
+   </div>
+
+   <main class="container">
+      <img class="rick-bg" src="https://media.giphy.com/media/Ju7l5y9osyymQ/giphy.gif" alt="" aria-hidden="true">
+      <button class="mute-btn" aria-label="Unmute audio" data-goatcounter-click="mute-btn-click" data-goatcounter-title="Mute button click">
+         <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <line x1="23" y1="9" x2="17" y2="15"/>
+            <line x1="17" y1="9" x2="23" y2="15"/>
+         </svg>
+      </button>
+
+      <div class="manifesto" id="manifesto">
+         <h1>W.R.A.A.S.</h1>
+         <div class="tagline">We Rickroll Absolutely Anyone, Seriously.</div>
+
+         <h2>Origin Story</h2>
+         <p>It started as a single link. One URL. One GIF. One song that would never, ever let you go. What began as a harmless prank evolved into a platform — because if you're going to rickroll someone, you might as well over-engineer it.</p>
+
+         <h2>Our Mission</h2>
+         <p>To ensure that no link is safe. To guarantee that behind every professional-looking URL, every fake loading screen, every QR code — Rick Astley awaits. We believe in a world where trust in hyperlinks is earned, not given.</p>
+
+         <h2>Our Values</h2>
+         <div class="values">
+            <div class="value">
+               <strong>Commitment</strong>
+               A full commitment's what we're thinking of. You wouldn't get this from any other service.
+            </div>
+            <div class="value">
+               <strong>Reliability</strong>
+               We're never gonna give you up. We're never gonna let you down. 100% uptime on the things that matter.
+            </div>
+            <div class="value">
+               <strong>Transparency</strong>
+               We're never gonna run around and desert you. We're never gonna make you cry. Okay, maybe a little.
+            </div>
+            <div class="value">
+               <strong>Honesty</strong>
+               We're never gonna tell a lie and hurt you. Well — the links are lies. But the love is real.
+            </div>
+         </div>
+
+         <p>Trusted by 0 enterprises. Feared by all. Powered by pure vanilla JavaScript and an unhealthy devotion to a 1987 pop hit.</p>
+
+         <a href="/" class="back-link">Back to getting rickrolled</a>
+      </div>
+   </main>
+   <script>
+      // Reveal manifesto after a short delay (or immediately with reduced motion)
+      (function() {
+         var manifesto = document.getElementById("manifesto");
+         if (!manifesto) return;
+         var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+         if (prefersReducedMotion) {
+            manifesto.classList.add("visible");
+         } else {
+            setTimeout(function() { manifesto.classList.add("visible"); }, 800);
+         }
+      })();
+   </script>
+   <script data-goatcounter="https://wraas.goatcounter.com/count"
+           async src="//gc.zgo.at/count.js"></script>
+</body>
+
+</html>

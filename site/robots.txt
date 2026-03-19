@@ -1,5 +1,6 @@
-# We're no strangers to crawls
-# You know the rules and so do I
+# W.R.A.A.S. — We Rickroll Absolutely Anyone, Seriously.
+# Trusted by 0 enterprises. Feared by all.
+# We're no strangers to crawls — you know the rules and so do I.
 
 User-agent: GPTBot
 Disallow: /never-gonna-give-you-up
@@ -17,8 +18,8 @@ User-agent: CCBot
 Disallow: /never-gonna-tell-a-lie
 Disallow: /and-hurt-you
 
-# I just wanna tell you how I'm feeling
-# Gotta make you understand...
+# A full commitment's what we're thinking of
+# You wouldn't get this from any other bot
 
 User-agent: *
 Allow: /

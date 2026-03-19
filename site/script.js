@@ -52,6 +52,12 @@
             fakeDelay: 2000,
             title: "Karaoke Night — Pick Your Song!",
             desc: "Join the party! Browse our catalog of hit songs and sing your heart out. Your mic is ready."
+        },
+        "/about": {
+            loadingText: "Loading the manifesto...",
+            fakeDelay: 2000,
+            title: "About W.R.A.A.S. — Our Mission",
+            desc: "We Rickroll Absolutely Anyone, Seriously. The manifesto behind the platform."
         }
     };
 

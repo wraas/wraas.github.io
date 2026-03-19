@@ -1,10 +1,12 @@
 # W.R.A.A.S.
 
-**W**eb **R**ickroll **A**s **A** **S**ervice — the internet's most over-engineered rickroll.
+> [!NOTE]
+> **W**e **R**ickroll **A**bsolutely **A**nyone, **S**eriously.
+> Trusted by 0 enterprises. Feared by all.
 
 Send someone a link. Any link. They all lead to Rick.
 
-**https://wraas.github.io**
+<https://wraas.github.io>
 
 ---
 
@@ -88,15 +90,16 @@ Complete with a professional-looking OG image resembling a secure document notif
 
 Certain URL paths show a fake loading screen (white page, spinner, contextual text) before revealing the rickroll, making the deception more convincing:
 
-| Path | Loading text | Delay |
-|------|-------------|-------|
-| [`/meeting`](https://wraas.github.io/meeting) | "Redirecting to your meeting..." | 2.0s |
-| [`/document`](https://wraas.github.io/document) | "Opening shared document..." | 2.5s |
-| [`/password-reset`](https://wraas.github.io/password-reset) | "Verifying your identity..." | 2.0s |
-| [`/invoice`](https://wraas.github.io/invoice) | "Loading invoice #48291..." | 2.2s |
-| [`/survey`](https://wraas.github.io/survey) | "Loading survey..." | 1.8s |
-| [`/clickbait`](https://wraas.github.io/clickbait) | "Loading exclusive content..." | 2.5s |
-| [`/karaoke`](https://wraas.github.io/karaoke) | "Warming up the mic..." | 2.0s |
+| Path                                                        | Loading text                     | Delay |
+| ----------------------------------------------------------- | -------------------------------- | ----- |
+| [`/meeting`](https://wraas.github.io/meeting)               | "Redirecting to your meeting..." | 2.0s  |
+| [`/document`](https://wraas.github.io/document)             | "Opening shared document..."     | 2.5s  |
+| [`/password-reset`](https://wraas.github.io/password-reset) | "Verifying your identity..."     | 2.0s  |
+| [`/invoice`](https://wraas.github.io/invoice)               | "Loading invoice #48291..."      | 2.2s  |
+| [`/survey`](https://wraas.github.io/survey)                 | "Loading survey..."              | 1.8s  |
+| [`/clickbait`](https://wraas.github.io/clickbait)           | "Loading exclusive content..."   | 2.5s  |
+| [`/karaoke`](https://wraas.github.io/karaoke)               | "Warming up the mic..."          | 2.0s  |
+| [`/about`](https://wraas.github.io/about)                   | "Loading the manifesto..."       | 2.0s  |
 
 Any other path (e.g. `/quarterly-report`, `/onboarding-form`) skips the loading screen and goes straight to Rick.
 
@@ -188,6 +191,8 @@ site/
 ├── og-image.svg          # Source SVG for the OG image
 ├── .well-known/
 │   └── security.txt      # Rickrolled security.txt
+├── about/
+│   └── index.html        # The W.R.A.A.S. manifesto (also a rickroll)
 ├── generate/
 │   └── index.html        # Link disguise generator tool
 └── karaoke/
