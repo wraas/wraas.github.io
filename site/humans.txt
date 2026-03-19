@@ -1,0 +1,12 @@
+/* TEAM */
+  Singer: Rick Astley
+  Role: Never giving you up
+  Location: Internet
+
+/* THANKS */
+  Name: You
+  Role: Getting rickrolled
+
+/* SITE */
+  Standards: Never gonna let you down
+  Software: Never gonna run around and desert you
