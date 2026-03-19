@@ -17,6 +17,7 @@
 -->
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://wraas.goatcounter.com; frame-ancestors 'none';">
    <title>Important Notice — Action Required</title>
    <meta name="description" content="You have a pending action that requires your immediate attention. Please review this important notice.">
 
@@ -38,6 +39,12 @@
    <!-- Favicon: innocent-looking document icon -->
    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
 
+   <!-- Preload hints for critical assets -->
+   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700" as="style">
+   <link rel="preload" href="/rick.webp" as="image" type="image/webp">
+   <link rel="preload" href="/script.js" as="script">
+   <link rel="preload" href="/style.css" as="style">
+
    <link href="/style.css" rel="stylesheet">
    <script src="/script.js"></script>
 </head>
@@ -54,10 +61,10 @@
       <!-- Want to know how it works, read the usage guide -->
       <!-- https://wraas.github.io/usage-guide -->
       <!-- Lyrics source: https://www.lyricsondemand.com/r/rickastleylyrics/nevergonnagiveyouuplyrics.html -->
-      <!-- To self-host: save as rick.webp and uncomment the <picture> wrapper -->
-      <!-- <picture><source srcset="rick.webp" type="image/webp"> -->
-      <img class="rick-bg" src="https://media.giphy.com/media/Ju7l5y9osyymQ/giphy.gif" alt="" aria-hidden="true">
-      <!-- </picture> -->
+      <picture>
+         <source srcset="/rick.webp" type="image/webp">
+         <img class="rick-bg" src="/rick.gif" alt="" aria-hidden="true">
+      </picture>
       <button class="mute-btn" aria-label="Unmute audio" data-goatcounter-click="mute-btn-click" data-goatcounter-title="Mute button click">
          <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
@@ -81,8 +88,11 @@
          </a>
       </div>
    </main>
+   <!-- GoatCounter script: SRI not included as third-party CDN may update.
+        For production, fetch https://gc.zgo.at/count.js, compute SHA-384, and add:
+        integrity="sha384-HASH" crossorigin="anonymous" -->
    <script data-goatcounter="https://wraas.goatcounter.com/count"
-           async src="//gc.zgo.at/count.js"></script>
+           async src="//gc.zgo.at/count.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
