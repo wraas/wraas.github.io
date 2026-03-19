@@ -90,7 +90,7 @@ The sitemap points to the YouTube video. The `Crawl-delay` is set to `143` — t
 
 Two GitHub Actions workflows keep the rickroll alive:
 
-- **Check YouTube Videos** — Runs daily at 08:00 UTC and on every PR. Extracts all YouTube URLs from `site/`, checks their availability via oEmbed API and playability status. Opens an issue or comments on the PR if a video goes down.
+- **CI** — Runs on every PR and push to `main`. Lints HTML, CSS, and JS via `just lint`, checks that critical external URLs are reachable (Rick GIF, Google Fonts, GoatCounter), and validates OG metadata on the rickroll pages. Comments on the PR with details if anything fails.
 - **Check robots.txt** — Validates `robots.txt` syntax on every PR that modifies it. Ensures directives are valid, every `Allow`/`Disallow` has a preceding `User-agent`, and the catch-all `User-agent: *` rule exists.
 
 ### Analytics
@@ -105,7 +105,7 @@ Page views and mute button clicks are tracked via [GoatCounter](https://www.goat
 - **GitHub Pages** — Static hosting with custom 404.html for universal path matching
 - **Web Audio API** — Synthesized melody without external audio files
 - **GoatCounter** — Privacy-respecting analytics
-- **GitHub Actions** — Automated video availability and robots.txt validation
+- **GitHub Actions** — CI lint checks, external URL validation, and robots.txt syntax enforcement
 
 ## File Structure
 
@@ -124,7 +124,7 @@ site/
     └── index.html        # Karaoke troll page
 
 .github/workflows/
-├── check-videos.yaml     # Daily YouTube availability check
+├── ci.yaml               # Lint, external URL checks, OG validation
 └── check-robots-txt.yaml # robots.txt syntax validation on PR
 ```
 
