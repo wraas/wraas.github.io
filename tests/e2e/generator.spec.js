@@ -128,7 +128,7 @@ test.describe('Link Generator (/generate/) Integration', () => {
     expect(Number(height)).toBeGreaterThan(0);
 
     // Canvas should have pixel data (not empty)
-    const hasData = await qrCanvas.evaluate((canvas: HTMLCanvasElement) => {
+    const hasData = await qrCanvas.evaluate((canvas) => {
       const ctx = canvas.getContext('2d');
       if (!ctx) return false;
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -149,7 +149,7 @@ test.describe('Link Generator (/generate/) Integration', () => {
     const qrCanvas = page.locator('#qr-canvas');
 
     // Get initial QR data
-    const initialData = await qrCanvas.evaluate((canvas: HTMLCanvasElement) => {
+    const initialData = await qrCanvas.evaluate((canvas) => {
       const ctx = canvas.getContext('2d');
       if (!ctx) return null;
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -162,7 +162,7 @@ test.describe('Link Generator (/generate/) Integration', () => {
     await page.waitForTimeout(300);
 
     // Get new QR data
-    const newData = await qrCanvas.evaluate((canvas: HTMLCanvasElement) => {
+    const newData = await qrCanvas.evaluate((canvas) => {
       const ctx = canvas.getContext('2d');
       if (!ctx) return null;
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);

@@ -29,7 +29,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'python3 dev-server.py',
+    command: 'python3 dev-server.py 8080 _site',
     url: 'http://localhost:8080',
     reuseExistingServer: !process.env.CI,
     stdout: 'ignore',
