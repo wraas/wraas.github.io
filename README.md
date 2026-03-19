@@ -24,32 +24,11 @@ Any path that doesn't match a themed scenario goes straight to Rick — so `http
 
 ### Run locally
 
-Prerequisites: Python 3 and [just](https://github.com/casey/just).
+See [How to Run Locally](docs/how-to/run-locally.md) for setup and dev server instructions.
 
-```sh
-just dev
-```
+### Contribute
 
-This starts a local server at `http://localhost:8000` that mimics GitHub Pages 404 behavior (all unknown paths serve `404.html`).
-
-To verify the developer easter eggs:
-
-```sh
-# Check custom HTTP headers
-curl -I http://localhost:8000
-
-# Check humans.txt
-curl http://localhost:8000/humans.txt
-
-# Check security.txt
-curl http://localhost:8000/.well-known/security.txt
-```
-
-Then open `http://localhost:8000` in a browser and check the DevTools console for ASCII art.
-
-### Add a themed scenario
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for a step-by-step guide on adding new themed scenarios.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guides on adding themes, running tests, and submitting PRs. New contributors should start with the [First Theme Tutorial](docs/tutorials/first-theme.md).
 
 ---
 
@@ -147,10 +126,13 @@ Developers who inspect the site get rickrolled too:
 
 ### CI/CD
 
-Two GitHub Actions workflows keep the rickroll alive:
+Five GitHub Actions workflows keep the rickroll alive:
 
-- **CI** — Runs on every PR and push to `main`. Lints HTML, CSS, and JS via `just lint`, checks that critical external URLs are reachable (Rick GIF, Google Fonts, GoatCounter), and validates OG metadata on the rickroll pages. Comments on the PR with details if anything fails.
+- **CI** — Runs on every PR and push to `main`. Lints HTML, CSS, and JS via `just lint`, checks that critical external URLs are reachable, and validates OG metadata on the rickroll pages. Comments on the PR with details if anything fails.
 - **Check robots.txt** — Validates `robots.txt` syntax on every PR that modifies it. Ensures directives are valid, every `Allow`/`Disallow` has a preceding `User-agent`, and the catch-all `User-agent: *` rule exists.
+- **Lighthouse CI** — Audits performance, accessibility, best practices, and SEO on every PR and push to `main`. Comments scores on the PR; all categories must score 90+.
+- **Broken Links** — Runs weekly and on push to `main`. Checks all links in `site/` and auto-creates an issue if any are broken.
+- **Preview Build** — Builds the site on every PR and uploads the artifact for local preview.
 
 ### Analytics
 
@@ -164,7 +146,7 @@ Page views and mute button clicks are tracked via [GoatCounter](https://www.goat
 - **GitHub Pages** — Static hosting with custom 404.html for universal path matching
 - **Web Audio API** — Synthesized melody without external audio files
 - **GoatCounter** — Privacy-respecting analytics
-- **GitHub Actions** — CI lint checks, external URL validation, and robots.txt syntax enforcement
+- **GitHub Actions** — CI lint checks, Lighthouse audits, broken link monitoring, and PR preview builds
 
 ## File Structure
 
@@ -174,6 +156,9 @@ site/
 ├── index.html            # The rickroll (served for the root path)
 ├── style.css             # Styles, animations, fake loading overlay
 ├── script.js             # Reveal sequence, audio system, theme router
+├── sw.js                 # Service worker for offline caching
+├── rick.gif              # Self-hosted Rick Astley GIF
+├── rick.webp             # WebP version of the GIF
 ├── robots.txt            # The other rickroll
 ├── humans.txt            # Rickrolled humans.txt
 ├── og-image.png          # Social media preview image
@@ -185,11 +170,31 @@ site/
 ├── generate/
 │   └── index.html        # Link disguise generator tool
 └── karaoke/
-    └── index.html        # Karaoke troll page
+    ├── index.html        # Karaoke troll page
+    └── karaoke.js        # Karaoke page JavaScript module
 
 .github/workflows/
 ├── ci.yaml               # Lint, external URL checks, OG validation
-└── check-robots-txt.yaml # robots.txt syntax validation on PR
+├── check-robots-txt.yaml # robots.txt syntax validation on PR
+├── deploy.yaml           # GitHub Pages deployment
+├── lighthouse.yaml       # Lighthouse performance audits
+├── links.yaml            # Broken link checker
+└── preview.yaml          # PR preview build
+
+docs/
+├── tutorials/
+│   └── first-theme.md            # End-to-end tutorial for new contributors
+├── how-to/
+│   ├── add-a-theme.md            # Add a themed scenario
+│   ├── run-locally.md            # Set up the dev environment
+│   ├── run-tests.md              # Run the test suite
+│   └── submit-a-pr.md            # Open a pull request
+├── explanation/
+│   ├── architecture.md           # How the rickroll pipeline works
+│   └── image-formats.md          # Why both GIF and WebP
+└── reference/
+    ├── test-suite.md             # Test catalog, coverage, and timing
+    └── theme-configuration.md    # Theme object fields and constraints
 ```
 
 ## License
