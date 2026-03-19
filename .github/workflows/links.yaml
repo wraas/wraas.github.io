@@ -20,7 +20,7 @@ jobs:
 
       - name: Link Checker
         id: lychee
-        uses: lycheeverse/lychee-action@c36908d6ff1124cb27dc20f46bde858cec57b1228 # v1.10.0
+        uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411 # v2.8.0
         with:
           args: |
             --exclude youtube.com
