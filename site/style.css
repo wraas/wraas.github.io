@@ -102,12 +102,18 @@ body {
     outline-offset: 2px;
 }
 
-.generate-link {
+.bottom-links {
     position: fixed;
     bottom: 1em;
     left: 50%;
     transform: translateX(-50%);
     z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+}
+
+.generate-link {
     color: rgba(255, 255, 255, 0.4);
     font-size: 0.8em;
     text-decoration: none;
@@ -116,6 +122,20 @@ body {
 
 .generate-link:hover,
 .generate-link:focus {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.karaoke-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.karaoke-link:hover,
+.karaoke-link:focus {
     color: rgba(255, 255, 255, 0.8);
 }
 
