@@ -49,18 +49,7 @@ Then open `http://localhost:8000` in a browser and check the DevTools console fo
 
 ### Add a themed scenario
 
-Add an entry to the `themes` object in `site/script.js`:
-
-```js
-"/your-path": {
-    loadingText: "Your loading message...",
-    fakeDelay: 2000,
-    title: "Browser Tab Title",
-    desc: "Description for OG meta tag."
-}
-```
-
-The path is matched against the URL, so `/your-path` triggers on `https://wraas.github.io/your-path`. Keyword matching also works — if the URL contains the keyword anywhere, the theme activates.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for a step-by-step guide on adding new themed scenarios.
 
 ---
 
