@@ -40,6 +40,8 @@ Certain URL paths show a fake loading screen (white page, spinner, contextual te
 | [`/password-reset`](https://wraas.github.io/password-reset) | "Verifying your identity..." | 2.0s |
 | [`/invoice`](https://wraas.github.io/invoice) | "Loading invoice #48291..." | 2.2s |
 | [`/survey`](https://wraas.github.io/survey) | "Loading survey..." | 1.8s |
+| [`/clickbait`](https://wraas.github.io/clickbait) | "Loading exclusive content..." | 2.5s |
+| [`/karaoke`](https://wraas.github.io/karaoke) | "Warming up the mic..." | 2.0s |
 
 Any other path (e.g. `/quarterly-report`, `/onboarding-form`) skips the loading screen and goes straight to Rick.
 
@@ -116,8 +118,10 @@ docs/
 ├── robots.txt            # The other rickroll
 ├── og-image.png          # Social media preview image
 ├── og-image.svg          # Source SVG for the OG image
-└── generate/
-    └── index.html        # Link disguise generator tool
+├── generate/
+│   └── index.html        # Link disguise generator tool
+└── karaoke/
+    └── index.html        # Karaoke troll page
 
 .github/workflows/
 ├── check-videos.yaml     # Daily YouTube availability check
