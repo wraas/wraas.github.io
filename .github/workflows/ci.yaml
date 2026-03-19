@@ -29,14 +29,18 @@ jobs:
         run: |
           # Extract external URLs from site files (src, href, content, @import, data-goatcounter)
           # Then normalize protocol-relative URLs and deduplicate
-          urls=$(grep -roEhI '(https?://|//)[^"'"'"' <>)]+' site/ \
+          urls=$(grep -roEhI --include='*.html' --include='*.css' --include='*.js' --include='*.svg' \
+            '(https?://|//)[^"'"'"' <>)]+' site/ \
             | sed 's/^\/\//https:\/\//' \
+            | sed 's/;$//' \
             | grep -v 'xmlns' \
+            | grep -v 'w3\.org' \
             | grep -v 'wraas\.github\.io' \
             | grep -v 'youtube\.com' \
             | grep -v 'lyricsondemand\.com' \
             | grep -v 'goatcounter\.com' \
-            | sort -u)
+            | grep -v 'gc\.zgo\.at' \
+            | sort -u || true)
 
           if [ -z "$urls" ]; then
             echo "No external URLs found"
