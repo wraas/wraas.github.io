@@ -17,7 +17,6 @@ build: clean
     mkdir -p {{ out }}
     cp -r {{ src }}/* {{ out }}/
     @just cache-bust
-    @echo "Built site in {{ out }}/"
 
 # Add content-hash query strings to static assets
 cache-bust:

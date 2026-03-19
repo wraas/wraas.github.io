@@ -27,7 +27,7 @@ jobs:
         run: |
           # Extract external URLs from site files (src, href, content, @import, data-goatcounter)
           # Then normalize protocol-relative URLs and deduplicate
-          urls=$(grep -roEh '(https?://|//)[^"'"'"' <>)]+' site/ \
+          urls=$(grep -roEhI '(https?://|//)[^"'"'"' <>)]+' site/ \
             | sed 's/^\/\//https:\/\//' \
             | grep -v 'xmlns' \
             | grep -v 'wraas\.github\.io' \
@@ -113,9 +113,29 @@ jobs:
 
             const body = `## CI Failures\n\n${sections.join('\n\n')}\n\nPlease fix before merging.`;
 
-            await github.rest.issues.createComment({
+            const marker = "<!-- ci-report -->";
+            const bodyWithMarker = marker + "\n" + body;
+
+            const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: body
             });
+
+            const existing = comments.find(c => c.body.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body: bodyWithMarker,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: bodyWithMarker,
+              });
+            }
