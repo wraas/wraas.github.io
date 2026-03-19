@@ -505,6 +505,12 @@
                 { title: "Dancing Queen", artist: "ABBA", genre: "Disco", difficulty: "easy" }
             ];
 
+            function trackEvent(path, title) {
+                if (typeof goatcounter !== "undefined" && goatcounter.count) {
+                    goatcounter.count({ path: path, title: title, event: true });
+                }
+            }
+
             var songGrid = document.getElementById("song-grid");
             var searchBar = document.getElementById("search-bar");
 
@@ -522,8 +528,9 @@
                 var lowerFilter = (filter || "").toLowerCase();
 
                 // Easter egg: searching "never" or "rick" reveals the true setlist
-                var catalog = (lowerFilter.indexOf("never") !== -1 || lowerFilter.indexOf("rick") !== -1)
-                    ? rickLyrics : songs;
+                var isEasterEgg = lowerFilter.indexOf("never") !== -1 || lowerFilter.indexOf("rick") !== -1;
+                if (isEasterEgg) trackEvent("karaoke-easter-egg", "Easter egg search");
+                var catalog = isEasterEgg ? rickLyrics : songs;
 
                 catalog.forEach(function(song, i) {
                     if (catalog === songs && lowerFilter &&
@@ -810,6 +817,7 @@
 
             muteBtn.addEventListener("click", function(e) {
                 e.stopPropagation();
+                trackEvent("karaoke-mute-click", "Karaoke mute toggle");
                 if (isMuted) {
                     isMuted = false;
                     if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
@@ -834,6 +842,7 @@
 
             // ---- Start song (the troll) ----
             function startSong(song) {
+                trackEvent("karaoke-song-select", "Song selected: " + song.title);
                 // Stop consent melody before karaoke takes over
                 if (window.stopConsentMelody) window.stopConsentMelody();
 
@@ -872,6 +881,7 @@
 
             // ---- Back to songs ----
             backBtn.addEventListener("click", function() {
+                trackEvent("karaoke-back-click", "Back to song list");
                 stopKaraoke();
                 karaokeStage.classList.remove("visible");
                 nowPlaying.classList.remove("visible");
@@ -1067,6 +1077,8 @@
             setInterval(spawnLyric, 3000);
         })();
     </script>
+    <script data-goatcounter="https://wraas.goatcounter.com/count"
+            async src="//gc.zgo.at/count.js"></script>
 </body>
 
 </html>

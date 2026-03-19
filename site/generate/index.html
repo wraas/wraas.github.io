@@ -677,10 +677,17 @@
                 QR.render(qrCanvas, url, 4);
             }
 
+            function trackEvent(path, title) {
+                if (typeof goatcounter !== "undefined" && goatcounter.count) {
+                    goatcounter.count({ path: path, title: title, event: true });
+                }
+            }
+
             themeSelect.addEventListener("change", function() {
                 customPath.value = "";
                 showSuggestions(themeSelect.value);
                 updateUrl();
+                trackEvent("generate-scenario-" + (themeSelect.value || "direct"), "Scenario selected");
             });
             customPath.addEventListener("input", updateUrl);
             updateUrl();
@@ -690,11 +697,13 @@
                 link.download = "rickroll-qr.png";
                 link.href = qrCanvas.toDataURL("image/png");
                 link.click();
+                trackEvent("qr-download", "QR code download");
             });
 
             copyBtn.addEventListener("click", function() {
                 var url = outputUrl.textContent;
                 navigator.clipboard.writeText(url).then(function() {
+                    trackEvent("link-copy", "Link copied");
                     copyBtn.textContent = "Copied!";
                     copyBtn.classList.add("copied");
                     setTimeout(function() {
@@ -872,6 +881,8 @@
             setInterval(spawnLyric, 3000);
         })();
     </script>
+    <script data-goatcounter="https://wraas.goatcounter.com/count"
+            async src="//gc.zgo.at/count.js"></script>
 </body>
 
 </html>

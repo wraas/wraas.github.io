@@ -1,6 +1,12 @@
 (function() {
     "use strict";
 
+    function trackEvent(path, title) {
+        if (typeof goatcounter !== "undefined" && goatcounter.count) {
+            goatcounter.count({ path: path, title: title, event: true });
+        }
+    }
+
     var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // --- Theme system: fake loading screens based on URL path ---
@@ -112,6 +118,7 @@
             ];
             skipBtn.addEventListener("click", function() {
                 clickCount++;
+                trackEvent("skip-btn-click", "Skip button click");
                 if (clickCount < messages.length) {
                     text.textContent = messages[clickCount];
                 } else {
@@ -347,6 +354,7 @@
         // Both buttons start the melody
         function onConsent() {
             banner.remove();
+            trackEvent("consent-click", "Consent banner click");
             initAudio();
             if (audioCtx && audioCtx.state === "suspended") {
                 audioCtx.resume().then(function() {
@@ -390,13 +398,7 @@
                 e.preventDefault();
                 toggleMute();
 
-                if (typeof goatcounter !== "undefined" && goatcounter.count) {
-                    goatcounter.count({
-                        path: "mute-btn-click",
-                        title: "Mute button click",
-                        event: true
-                    });
-                }
+                trackEvent("mute-btn-click", "Mute button click");
             });
         }
 
@@ -444,6 +446,10 @@
 
         // Theme-based fake loading or direct reveal
         var theme = getTheme();
+        if (theme) {
+            var themePath = window.location.pathname.replace(/\/$/, "") || "/";
+            trackEvent("theme-" + themePath, "Theme triggered: " + theme.title);
+        }
         var isKaraoke = window.location.pathname.toLowerCase().indexOf("karaoke") !== -1
             && window.location.pathname.indexOf("/karaoke/") !== 0;
         if (isKaraoke && theme && !prefersReducedMotion) {
