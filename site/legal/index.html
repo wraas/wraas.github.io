@@ -14,21 +14,21 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://wraas.goatcounter.com; frame-ancestors 'none';">
-   <title>About W.R.A.A.S. — Our Mission</title>
-   <meta name="description" content="W.R.A.A.S. — We Rickroll Absolutely Anyone, Seriously. The origin story, mission, and values behind the internet's most over-engineered rickroll.">
+   <title>Legal Mentions — W.R.A.A.S.</title>
+   <meta name="description" content="Legal mentions for W.R.A.A.S. — We Rickroll Absolutely Anyone, Seriously. Hosting, analytics, intellectual property, and other legally required information.">
 
    <!-- Open Graph / Social Media -->
    <meta property="og:type" content="website">
-   <meta property="og:title" content="About W.R.A.A.S. — Our Mission">
-   <meta property="og:description" content="We Rickroll Absolutely Anyone, Seriously. Learn about the mission behind the internet's most over-engineered rickroll platform.">
+   <meta property="og:title" content="Legal Mentions — W.R.A.A.S.">
+   <meta property="og:description" content="Legal mentions for the internet's most over-engineered rickroll platform.">
    <meta property="og:image" content="https://wraas.github.io/og-image.png">
-   <meta property="og:url" content="https://wraas.github.io/about/">
+   <meta property="og:url" content="https://wraas.github.io/legal/">
    <meta property="og:site_name" content="W.R.A.A.S. — Secure Document Portal">
 
    <!-- Twitter Card -->
    <meta name="twitter:card" content="summary_large_image">
-   <meta name="twitter:title" content="About W.R.A.A.S. — Our Mission">
-   <meta name="twitter:description" content="We Rickroll Absolutely Anyone, Seriously. The manifesto behind the platform.">
+   <meta name="twitter:title" content="Legal Mentions — W.R.A.A.S.">
+   <meta name="twitter:description" content="Legal mentions for the internet's most over-engineered rickroll platform.">
    <meta name="twitter:image" content="https://wraas.github.io/og-image.png">
    <meta name="twitter:site" content="W.R.A.A.S.">
 
@@ -43,7 +43,7 @@
    <style>
       body { overflow: auto; }
       .container { height: auto; min-height: 100vh; padding: 2em 1em; display: flex; align-items: center; justify-content: center; }
-      .manifesto {
+      .legal {
          position: relative;
          z-index: 2;
          max-width: 640px;
@@ -51,7 +51,7 @@
          padding: 2.5em 2em;
          color: #e0e0e0;
          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-         text-align: center;
+         text-align: left;
          background: rgba(0, 0, 0, 0.75);
          border-radius: 12px;
       }
@@ -59,61 +59,51 @@
          border: 2px solid #5bcefa;
          border-radius: 12px;
       }
-      .manifesto-header {
+      .legal-header {
          display: flex;
          align-items: center;
          justify-content: center;
          gap: 1em;
          margin-bottom: 2em;
+         text-align: center;
       }
-      .manifesto-header-text {
+      .legal-header-text {
          text-align: left;
       }
-      .manifesto h1 {
+      .legal h1 {
          font-size: clamp(1.8em, 5vw, 2.8em);
          color: #fff;
          margin-bottom: 0.1em;
          letter-spacing: -0.02em;
       }
-      .manifesto .tagline {
+      .legal .tagline {
          color: #5bcefa;
          font-size: clamp(0.9em, 2.5vw, 1.1em);
          font-style: italic;
       }
-      .manifesto h2 {
+      .legal h2 {
          font-size: 1.2em;
          color: #fff;
          margin-top: 1.8em;
          margin-bottom: 0.5em;
       }
-      .manifesto p {
+      .legal p {
          font-size: 0.95em;
          line-height: 1.7;
          color: #d4d4d4;
          margin-bottom: 1em;
       }
-      .manifesto .values {
-         text-align: left;
-         margin: 1.5em auto;
-         max-width: 480px;
-      }
-      .manifesto .value {
-         margin-bottom: 1em;
-      }
-      .manifesto .value strong {
-         color: #fff;
-         display: block;
-         margin-bottom: 0.2em;
-      }
-      .manifesto .back-link {
-         display: inline-block;
-         margin-top: 2em;
+      .legal a {
          color: #5bcefa;
          text-decoration: none;
-         font-size: 0.9em;
          transition: color 0.2s;
       }
-      .manifesto .back-link:hover { color: #8edbfc; }
+      .legal a:hover { color: #8edbfc; }
+      .legal .back-link {
+         display: inline-block;
+         margin-top: 2em;
+         font-size: 0.9em;
+      }
    </style>
 </head>
 
@@ -123,49 +113,42 @@
          <source srcset="/rick.webp" type="image/webp">
          <img class="rick-bg visible" src="/rick.gif" alt="" aria-hidden="true">
       </picture>
-      <div class="manifesto" id="manifesto">
-         <div class="manifesto-header">
+      <div class="legal" id="legal">
+         <div class="legal-header">
             <picture>
                <source srcset="/logo-200.webp" type="image/webp">
                <img src="/logo-200.png" alt="W.R.A.A.S. logo" width="80" height="80" class="page-logo">
             </picture>
-            <div class="manifesto-header-text">
-               <h1>W.R.A.A.S.</h1>
-               <div class="tagline">We Rickroll Absolutely Anyone, Seriously.</div>
+            <div class="legal-header-text">
+               <h1>Legal Mentions</h1>
+               <div class="tagline">The fine print never gonna let you down.</div>
             </div>
          </div>
 
-         <h2>Origin Story</h2>
-         <p>It started as a single link. One URL. One GIF. One song that would never, ever let you go. What began as a harmless prank evolved into a platform — because if you're going to rickroll someone, you might as well over-engineer it.</p>
+         <h2>Publisher</h2>
+         <p>W.R.A.A.S. — We Rickroll Absolutely Anyone, Seriously.<br>
+            This site is a personal, non-commercial, open-source project maintained by <a href="https://github.com/wraas">the W.R.A.A.S. organization</a> on GitHub.</p>
 
-         <h2>Our Mission</h2>
-         <p>To ensure that no link is safe. To guarantee that behind every professional-looking URL, every fake loading screen, every QR code — Rick Astley awaits. We believe in a world where trust in hyperlinks is earned, not given.</p>
+         <h2>Hosting</h2>
+         <p>This site is hosted on <a href="https://pages.github.com/">GitHub Pages</a>, a service provided by GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, United States.</p>
 
-         <h2>Our Values</h2>
-         <div class="values">
-            <div class="value">
-               <strong>Commitment</strong>
-               A full commitment's what we're thinking of. You wouldn't get this from any other service.
-            </div>
-            <div class="value">
-               <strong>Reliability</strong>
-               We're never gonna give you up. We're never gonna let you down. 100% uptime on the things that matter.
-            </div>
-            <div class="value">
-               <strong>Transparency</strong>
-               We're never gonna run around and desert you. We're never gonna make you cry. Okay, maybe a little.
-            </div>
-            <div class="value">
-               <strong>Honesty</strong>
-               We're never gonna tell a lie and hurt you. Well — the links are lies. But the love is real.
-            </div>
-         </div>
+         <h2>Domain</h2>
+         <p>The domain <strong>wraas.click</strong> is the primary address of this site.</p>
 
-         <p>Trusted by 0 enterprises. Feared by all. Powered by pure vanilla JavaScript and an unhealthy devotion to a 1987 pop hit.</p>
+         <h2>Analytics</h2>
+         <p>This site uses <a href="https://www.goatcounter.com/">GoatCounter</a>, a privacy-respecting, open-source web analytics platform. GoatCounter does not use cookies, does not collect personal data, and is fully compliant with GDPR, CCPA, and PECR. No consent banner needed — we would never gonna give you up to ad trackers.</p>
+
+         <h2>Intellectual Property</h2>
+         <p>The source code of this site is open-source and available under the terms specified in the <a href="https://github.com/wraas/wraas.github.io">project repository</a>.</p>
+         <p>"Never Gonna Give You Up" is performed by Rick Astley, written by Stock Aitken Waterman, and published by RCA Records (1987). All rights belong to their respective owners. This site is a parody and tribute — no copyright infringement is intended.</p>
+
+         <h2>Liability</h2>
+         <p>This site is provided "as is" with absolutely no warranty. The publisher cannot be held responsible for any emotional distress, trust issues, or sudden urges to dance caused by visiting this site. You knew what you were getting into. Or did you?</p>
+
+         <h2>Contact</h2>
+         <p>For any inquiries, please open an issue on the <a href="https://github.com/wraas/wraas.github.io/issues">GitHub repository</a>. We promise we will never gonna run around and desert you.</p>
 
          <a href="/" class="back-link">Back to getting rickrolled</a>
-         <span style="color: rgba(255,255,255,0.3); margin-top: 2em; display: inline-block;"> · </span>
-         <a href="/legal/" class="back-link" style="margin-top: 0;">Legal</a>
       </div>
    </main>
    <!-- GoatCounter analytics: SRI integrity hash pins the script to a known version.
