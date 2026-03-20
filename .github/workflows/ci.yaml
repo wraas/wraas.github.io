@@ -15,7 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # v3.1.0
+      - uses: taiki-e/install-action@42721ded7ddc3cd90f687527e8602066e4e1ff3a # v2.69.2
+        with:
+          tool: just
 
       - name: Lint HTML, CSS, and JS
         id: lint
@@ -27,14 +29,18 @@ jobs:
         run: |
           # Extract external URLs from site files (src, href, content, @import, data-goatcounter)
           # Then normalize protocol-relative URLs and deduplicate
-          urls=$(grep -roEh '(https?://|//)[^"'"'"' <>)]+' site/ \
+          urls=$(grep -roEhI --include='*.html' --include='*.css' --include='*.js' --include='*.svg' \
+            '(https?://|//)[^"'"'"' <>)]+' site/ \
             | sed 's/^\/\//https:\/\//' \
+            | sed 's/;$//' \
             | grep -v 'xmlns' \
+            | grep -v 'w3\.org' \
             | grep -v 'wraas\.github\.io' \
             | grep -v 'youtube\.com' \
             | grep -v 'lyricsondemand\.com' \
             | grep -v 'goatcounter\.com' \
-            | sort -u)
+            | grep -v 'gc\.zgo\.at' \
+            | sort -u || true)
 
           if [ -z "$urls" ]; then
             echo "No external URLs found"
@@ -113,9 +119,29 @@ jobs:
 
             const body = `## CI Failures\n\n${sections.join('\n\n')}\n\nPlease fix before merging.`;
 
-            await github.rest.issues.createComment({
+            const marker = "<!-- ci-report -->";
+            const bodyWithMarker = marker + "\n" + body;
+
+            const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: body
             });
+
+            const existing = comments.find(c => c.body.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body: bodyWithMarker,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: bodyWithMarker,
+              });
+            }

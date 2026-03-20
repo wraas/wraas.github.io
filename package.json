@@ -1,0 +1,17 @@
+{
+  "name": "wraas-tests",
+  "version": "1.0.0",
+  "description": "Testing suite for W.R.A.A.S. rickroll platform",
+  "scripts": {
+    "test": "npx playwright test tests/unit tests/e2e tests/a11y",
+    "test:unit": "npx playwright test tests/unit",
+    "test:e2e": "npx playwright test tests/e2e",
+    "test:visual": "npx playwright test tests/visual",
+    "test:a11y": "npx playwright test tests/a11y",
+    "test:all": "npx playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "axe-playwright": "^2.0.0"
+  }
+}

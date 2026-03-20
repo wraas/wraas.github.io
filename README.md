@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.png" alt="W.R.A.A.S. logo" width="200">
+</p>
+
 # W.R.A.A.S.
 
 > [!NOTE]
@@ -24,43 +28,11 @@ Any path that doesn't match a themed scenario goes straight to Rick — so `http
 
 ### Run locally
 
-Prerequisites: Python 3 and [just](https://github.com/casey/just).
+See [How to Run Locally](docs/how-to/run-locally.md) for setup and dev server instructions.
 
-```sh
-just dev
-```
+### Contribute
 
-This starts a local server at `http://localhost:8000` that mimics GitHub Pages 404 behavior (all unknown paths serve `404.html`).
-
-To verify the developer easter eggs:
-
-```sh
-# Check custom HTTP headers
-curl -I http://localhost:8000
-
-# Check humans.txt
-curl http://localhost:8000/humans.txt
-
-# Check security.txt
-curl http://localhost:8000/.well-known/security.txt
-```
-
-Then open `http://localhost:8000` in a browser and check the DevTools console for ASCII art.
-
-### Add a themed scenario
-
-Add an entry to the `themes` object in `site/script.js`:
-
-```js
-"/your-path": {
-    loadingText: "Your loading message...",
-    fakeDelay: 2000,
-    title: "Browser Tab Title",
-    desc: "Description for OG meta tag."
-}
-```
-
-The path is matched against the URL, so `/your-path` triggers on `https://wraas.github.io/your-path`. Keyword matching also works — if the URL contains the keyword anywhere, the theme activates.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guides on adding themes, running tests, and submitting PRs. New contributors should start with the [First Theme Tutorial](docs/tutorials/first-theme.md).
 
 ---
 
@@ -158,10 +130,14 @@ Developers who inspect the site get rickrolled too:
 
 ### CI/CD
 
-Two GitHub Actions workflows keep the rickroll alive:
+Five GitHub Actions workflows keep the rickroll alive:
 
-- **CI** — Runs on every PR and push to `main`. Lints HTML, CSS, and JS via `just lint`, checks that critical external URLs are reachable (Rick GIF, Google Fonts, GoatCounter), and validates OG metadata on the rickroll pages. Comments on the PR with details if anything fails.
+- **CI** — Runs on every PR and push to `main`. Lints HTML, CSS, and JS via `just lint`, checks that critical external URLs are reachable, and validates OG metadata on the rickroll pages. Comments on the PR with details if anything fails.
 - **Check robots.txt** — Validates `robots.txt` syntax on every PR that modifies it. Ensures directives are valid, every `Allow`/`Disallow` has a preceding `User-agent`, and the catch-all `User-agent: *` rule exists.
+- **Check SRI Hash** — Runs daily. Verifies the GoatCounter `count.js` SRI integrity hash is still valid and opens a PR to update it if it has changed.
+- **Lighthouse CI** — Audits performance, accessibility, best practices, and SEO on every PR and push to `main`. Comments scores on the PR; all categories must score 90+.
+- **Broken Links** — Runs weekly and on push to `main`. Checks all links in `site/` and auto-creates an issue if any are broken.
+- **Preview Build** — Builds the site on every PR and uploads the artifact for local preview.
 
 ### Analytics
 
@@ -175,7 +151,7 @@ Page views and mute button clicks are tracked via [GoatCounter](https://www.goat
 - **GitHub Pages** — Static hosting with custom 404.html for universal path matching
 - **Web Audio API** — Synthesized melody without external audio files
 - **GoatCounter** — Privacy-respecting analytics
-- **GitHub Actions** — CI lint checks, external URL validation, and robots.txt syntax enforcement
+- **GitHub Actions** — CI lint checks, Lighthouse audits, broken link monitoring, and PR preview builds
 
 ## File Structure
 
@@ -185,6 +161,17 @@ site/
 ├── index.html            # The rickroll (served for the root path)
 ├── style.css             # Styles, animations, fake loading overlay
 ├── script.js             # Reveal sequence, audio system, theme router
+├── sw.js                 # Service worker for offline caching
+├── logo-200.webp         # W.R.A.A.S. logo (WebP, used in pages)
+├── logo-200.png          # W.R.A.A.S. logo (PNG fallback)
+├── favicon.ico           # Multi-size favicon (16/32/48px)
+├── favicon-16x16.png     # 16x16 favicon
+├── favicon-32x32.png     # 32x32 favicon
+├── apple-touch-icon.png  # 180x180 Apple touch icon
+├── android-chrome-192x192.png  # 192x192 Android icon
+├── android-chrome-512x512.png  # 512x512 Android icon
+├── rick.gif              # Self-hosted Rick Astley GIF
+├── rick.webp             # WebP version of the GIF
 ├── robots.txt            # The other rickroll
 ├── humans.txt            # Rickrolled humans.txt
 ├── og-image.png          # Social media preview image
@@ -196,11 +183,35 @@ site/
 ├── generate/
 │   └── index.html        # Link disguise generator tool
 └── karaoke/
-    └── index.html        # Karaoke troll page
+    ├── index.html        # Karaoke troll page
+    └── karaoke.js        # Karaoke page JavaScript module
 
 .github/workflows/
+├── check-robots-txt.yaml # robots.txt syntax validation on PR
+├── check-sri.yaml        # Daily GoatCounter SRI hash verification
 ├── ci.yaml               # Lint, external URL checks, OG validation
-└── check-robots-txt.yaml # robots.txt syntax validation on PR
+├── deploy.yaml           # GitHub Pages deployment
+├── lighthouse.yaml       # Lighthouse performance audits
+├── links.yaml            # Broken link checker
+└── preview.yaml          # PR preview build
+
+docs/
+├── tutorials/
+│   └── first-theme.md            # End-to-end tutorial for new contributors
+├── how-to/
+│   ├── add-a-theme.md            # Add a themed scenario
+│   ├── debug-ci-failures.md      # Diagnose and fix CI failures
+│   ├── run-locally.md            # Set up the dev environment
+│   ├── run-tests.md              # Run the test suite
+│   └── submit-a-pr.md            # Open a pull request
+├── explanation/
+│   ├── architecture.md           # How the rickroll pipeline works
+│   ├── image-formats.md          # Why both GIF and WebP
+│   └── sri-and-supply-chain.md   # SRI trade-offs for third-party scripts
+└── reference/
+    ├── ci-workflows.md           # GitHub Actions workflow reference
+    ├── test-suite.md             # Test catalog, coverage, and timing
+    └── theme-configuration.md    # Theme object fields and constraints
 ```
 
 ## License

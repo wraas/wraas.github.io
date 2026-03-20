@@ -1,0 +1,47 @@
+name: Preview Build
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: taiki-e/install-action@42721ded7ddc3cd90f687527e8602066e4e1ff3a # v2.69.2
+        with:
+          tool: just
+
+      - name: Build site
+        id: build
+        run: just build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: preview-site-${{ github.event.pull_request.number }}
+          path: _site
+          retention-days: 7
+
+      - name: Comment on pull request
+        if: always()
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        with:
+          script: |
+            const fs = require("fs");
+            const prNumber = context.issue.number;
+            const artifactName = `preview-site-${prNumber}`;
+            const template = fs.readFileSync(".github/comment-templates/preview-build.md", "utf8");
+            const comment = template.replace("{{artifactName}}", artifactName);
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: comment
+            });

@@ -1,0 +1,66 @@
+name: Check SRI Hash
+
+on:
+  schedule:
+    # Run daily at 6 AM UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-sri:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Compute remote SRI hash
+        id: remote
+        run: |
+          HASH=$(curl -sf https://gc.zgo.at/count.js | openssl dgst -sha384 -binary | openssl base64 -A)
+          echo "hash=$HASH" >> "$GITHUB_OUTPUT"
+          echo "Remote hash: $HASH"
+
+      - name: Extract current SRI hash
+        id: current
+        run: |
+          HASH=$(grep -oP 'integrity="sha384-\K[^"]+' site/index.html)
+          echo "hash=$HASH" >> "$GITHUB_OUTPUT"
+          echo "Current hash: $HASH"
+
+      - name: Compare hashes
+        if: steps.remote.outputs.hash == steps.current.outputs.hash
+        run: echo "SRI hash is up to date"
+
+      - name: Update SRI hash in all HTML files
+        if: steps.remote.outputs.hash != steps.current.outputs.hash
+        run: |
+          OLD="${{ steps.current.outputs.hash }}"
+          NEW="${{ steps.remote.outputs.hash }}"
+          echo "Updating SRI hash: $OLD -> $NEW"
+          sed -i "s|integrity=\"sha384-${OLD}\"|integrity=\"sha384-${NEW}\"|g" \
+            site/index.html \
+            site/404.html \
+            site/about/index.html \
+            site/karaoke/index.html \
+            site/generate/index.html
+
+      - name: Create Pull Request
+        if: steps.remote.outputs.hash != steps.current.outputs.hash
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
+        with:
+          branch: fix/update-goatcounter-sri
+          commit-message: 'fix: update GoatCounter SRI hash'
+          title: 'fix: update GoatCounter SRI hash'
+          body: |
+            ## GoatCounter SRI hash update
+
+            The `count.js` script at `gc.zgo.at` has changed, causing the SRI integrity hash to become stale.
+
+            **Old hash:** `sha384-${{ steps.current.outputs.hash }}`
+            **New hash:** `sha384-${{ steps.remote.outputs.hash }}`
+
+            This was detected automatically by the `check-sri` workflow.
+          labels: sri-update
