@@ -338,13 +338,16 @@
         trackEvent("karaoke-mute-click", "Karaoke mute toggle");
         if (isMuted) {
             isMuted = false;
-            if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+            initAudio();
             updateMuteIcon(true);
             startKaraokeLoop();
         } else {
             isMuted = true;
-            if (audioCtx) audioCtx.suspend();
             stopKaraoke();
+            if (audioCtx) {
+                audioCtx.close();
+                audioCtx = null;
+            }
             updateMuteIcon(false);
         }
     });
@@ -408,7 +411,8 @@
         scoreEl.classList.remove("visible");
 
         if (audioCtx) {
-            audioCtx.suspend();
+            audioCtx.close();
+            audioCtx = null;
             isMuted = false;
         }
 

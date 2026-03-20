@@ -863,14 +863,16 @@
             showConsentBanner();
 
             // Any click or tap triggers the melody (maximum trolling)
+            var melodyStarted = false;
             function ensureMelody() {
+                if (melodyStarted) return;
+                if (document.getElementById("audio-hint")) return; // banner still visible
+                melodyStarted = true;
                 initAudio();
                 if (!audioCtx) return;
                 if (audioCtx.state === "suspended") {
-                    audioCtx.resume().then(function() {
-                        if (!isPlaying) playMelody();
-                    });
-                } else if (!isPlaying) {
+                    audioCtx.resume().then(function() { playMelody(); });
+                } else {
                     playMelody();
                 }
             }

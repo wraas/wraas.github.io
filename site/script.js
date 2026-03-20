@@ -253,14 +253,15 @@
         var bg = document.querySelector(".rick-bg");
         if (bg) bg.classList.add("visible");
 
+        var muteBtn = document.querySelector(".mute-btn");
+        if (muteBtn) muteBtn.classList.add("visible");
+
         var lines = document.querySelectorAll(".lyrics-line");
         var initialDelay = 600;
         var interval = 300;
 
         if (prefersReducedMotion) {
             lines.forEach(function(line) { line.classList.add("visible"); });
-            var muteBtn = document.querySelector(".mute-btn");
-            if (muteBtn) muteBtn.classList.add("visible");
             return;
         }
 
@@ -269,16 +270,12 @@
                 line.classList.add("visible");
             }, initialDelay + i * interval);
         });
-
-        setTimeout(function() {
-            var muteBtn = document.querySelector(".mute-btn");
-            if (muteBtn) muteBtn.classList.add("visible");
-        }, initialDelay + lines.length * interval);
     }
 
     // --- Audio system ---
     var audioCtx = null;
     var isPlaying = false;
+    var isMuted = false;
     var audioUnlocked = false;
     var melodyTimeout = null;
 
@@ -292,7 +289,7 @@
     }
 
     function playRickrollAudio() {
-        if (!audioCtx || isPlaying) return;
+        if (!audioCtx || isPlaying || isMuted) return;
 
         // 113 BPM timing (original song tempo)
         var beat = 60 / 113;
@@ -402,7 +399,8 @@
     }
 
     function toggleMute() {
-        if (!audioCtx) {
+        if (isMuted) {
+            isMuted = false;
             initAudio();
             if (audioCtx) {
                 playRickrollAudio();
@@ -411,17 +409,15 @@
             }
             return;
         }
-        if (isPlaying) {
-            audioCtx.suspend();
-            clearTimeout(melodyTimeout);
-            isPlaying = false;
-            updateMuteButton(false);
-        } else {
-            audioCtx.resume().then(function() {
-                playRickrollAudio();
-                updateMuteButton(true);
-            });
+        // Mute: stop everything
+        isMuted = true;
+        clearTimeout(melodyTimeout);
+        if (audioCtx) {
+            audioCtx.close();
+            audioCtx = null;
         }
+        isPlaying = false;
+        updateMuteButton(false);
     }
 
     function updateMuteButton(unmuted) {
@@ -585,6 +581,7 @@
         function ensureMelody(e) {
             // Let mute button handle its own clicks
             if (muteBtn && muteBtn.contains(e.target)) return;
+            if (isMuted) return;
             initAudio();
             if (!audioCtx) return;
             if (audioCtx.state === "suspended") {
