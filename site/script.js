@@ -449,9 +449,15 @@
             + '<button id="audio-hint-accept" style="background:#5bcefa;border:none;color:#fff;padding:8px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">Accept All</button>'
             + '</div>';
         document.body.appendChild(banner);
+        // Push bottom-links above the banner
+        var bottomLinks = document.querySelector(".bottom-links");
+        if (bottomLinks) {
+            bottomLinks.style.bottom = (banner.offsetHeight + 12) + "px";
+        }
         // Both buttons start the melody
         function onConsent() {
             banner.remove();
+            if (bottomLinks) { bottomLinks.style.bottom = ""; }
             trackEvent("consent-click", "Consent banner click");
             initAudio();
             if (audioCtx && audioCtx.state === "suspended") {
