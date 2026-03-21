@@ -52,6 +52,7 @@ The object key (e.g. `"/meeting"`) doubles as both an exact path and a keyword:
 | `/clickbait` | Loading exclusive content... | 2500ms | You Won't Believe What Happens Next |
 | `/karaoke` | Warming up the mic... | 2000ms | Karaoke Night — Pick Your Song! |
 | `/about` | Loading the manifesto... | 2000ms | About W.R.A.A.S. — Our Mission |
+| `/chuck` | Paying respects to the legend... | 2500ms | In Memoriam — Chuck Norris |
 
 ## Skip button behavior
 

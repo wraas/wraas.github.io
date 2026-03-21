@@ -39,7 +39,7 @@ Complete reference for the W.R.A.A.S. GitHub Actions workflows. For troubleshoot
 
 1. Build site via `just build`
 2. Start a local Python HTTP server on port 8000
-3. Run Lighthouse on 5 pages: `/`, `/about/`, `/generate/`, `/karaoke/`, `/404.html`
+3. Run Lighthouse on 6 pages: `/`, `/about/`, `/chuck/`, `/generate/`, `/karaoke/`, `/404.html`
 4. Fail if any category (performance, accessibility, best practices) scores below 90
 5. Comment on PR with per-page scores (updates existing comment if present)
 
@@ -73,7 +73,7 @@ Complete reference for the W.R.A.A.S. GitHub Actions workflows. For troubleshoot
 3. If hashes match: exit successfully
 4. If mismatched: update the `integrity` attribute in all 5 HTML files and create a PR
 
-**Updated files:** `site/index.html`, `site/404.html`, `site/about/index.html`, `site/karaoke/index.html`, `site/generate/index.html`
+**Updated files:** `site/index.html`, `site/404.html`, `site/about/index.html`, `site/chuck/index.html`, `site/karaoke/index.html`, `site/generate/index.html`
 
 **PR details:** branch `fix/update-goatcounter-sri`, label `sri-update`
 

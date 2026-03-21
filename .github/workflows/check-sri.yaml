@@ -44,6 +44,7 @@ jobs:
             site/index.html \
             site/404.html \
             site/about/index.html \
+            site/chuck/index.html \
             site/karaoke/index.html \
             site/generate/index.html
 

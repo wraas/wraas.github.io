@@ -6,7 +6,7 @@ Every visit to wraas.github.io passes through a four-stage pipeline: **routing**
 
 GitHub Pages serves `404.html` for any URL that doesn't match a real file. W.R.A.A.S. exploits this by making `404.html` and `index.html` identical — the rickroll page. This means every possible URL (`/quarterly-report`, `/onboarding-form`, `/literally-anything`) serves the same rickroll.
 
-The only real pages that exist as separate files are `/about/`, `/generate/`, and `/karaoke/`. Everything else hits the 404 catch-all.
+The only real pages that exist as separate files are `/about/`, `/chuck/`, `/generate/`, and `/karaoke/`. Everything else hits the 404 catch-all.
 
 ## Stage 1: Routing
 

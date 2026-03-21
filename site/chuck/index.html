@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<!--
+ __        __ ____      _        _     ____
+ \ \      / /|  _ \    / \      / \   / ___|
+  \ \ /\ / / | |_) |  / _ \    / _ \  \___ \
+   \ V  V /  |  _ <  / ___ \  / ___ \  ___) |
+    \_/\_/   |_| \_\/_/   \_\/_/   \_\|____/
+
+  We Rickroll Absolutely Anyone, Seriously.
+-->
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://wraas.goatcounter.com; frame-ancestors 'none';">
+   <title>In Memoriam — Chuck Norris (1940–2026)</title>
+   <meta name="description" content="A tribute to Chuck Norris — the only man who could never be rickrolled. Now, no one is safe.">
+
+   <!-- Open Graph / Social Media -->
+   <meta property="og:type" content="website">
+   <meta property="og:title" content="In Memoriam — Chuck Norris (1940–2026)">
+   <meta property="og:description" content="A tribute to Chuck Norris — the only man who could never be rickrolled. Now, no one is safe.">
+   <meta property="og:image" content="https://wraas.github.io/og-image.png">
+   <meta property="og:url" content="https://wraas.github.io/chuck/">
+   <meta property="og:site_name" content="W.R.A.A.S. — Secure Document Portal">
+
+   <!-- Twitter Card -->
+   <meta name="twitter:card" content="summary_large_image">
+   <meta name="twitter:title" content="In Memoriam — Chuck Norris (1940–2026)">
+   <meta name="twitter:description" content="A tribute to Chuck Norris — the only man who could never be rickrolled. Now, no one is safe.">
+   <meta name="twitter:image" content="https://wraas.github.io/og-image.png">
+   <meta name="twitter:site" content="W.R.A.A.S.">
+
+   <!-- Favicon -->
+   <link rel="icon" type="image/x-icon" href="/favicon.ico">
+   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+   <link rel="manifest" href="/site.webmanifest">
+
+   <link href="/style.css" rel="stylesheet">
+   <style>
+      body { overflow: auto; }
+      .container { height: auto; min-height: 100vh; padding: 2em 1em; display: flex; align-items: center; justify-content: center; }
+      .tribute {
+         position: relative;
+         z-index: 2;
+         max-width: 640px;
+         width: 100%;
+         padding: 2.5em 2em;
+         color: #e0e0e0;
+         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+         text-align: center;
+         background: rgba(0, 0, 0, 0.75);
+         border-radius: 12px;
+      }
+      .page-logo {
+         border: 2px solid #5bcefa;
+         border-radius: 12px;
+      }
+      .tribute-header {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         gap: 1em;
+         margin-bottom: 2em;
+      }
+      .tribute-header-text {
+         text-align: left;
+      }
+      .tribute h1 {
+         font-size: clamp(1.8em, 5vw, 2.8em);
+         color: #fff;
+         margin-bottom: 0.1em;
+         letter-spacing: -0.02em;
+      }
+      .tribute .tagline {
+         color: #5bcefa;
+         font-size: clamp(0.9em, 2.5vw, 1.1em);
+         font-style: italic;
+      }
+      .tribute h2 {
+         font-size: 1.2em;
+         color: #fff;
+         margin-top: 1.8em;
+         margin-bottom: 0.5em;
+      }
+      .tribute p {
+         font-size: 0.95em;
+         line-height: 1.7;
+         color: #d4d4d4;
+         margin-bottom: 1em;
+      }
+      .tribute .facts {
+         text-align: left;
+         margin: 1.5em auto;
+         max-width: 520px;
+      }
+      .tribute .fact {
+         margin-bottom: 0.8em;
+         padding-left: 1.2em;
+         position: relative;
+         font-size: 0.95em;
+         line-height: 1.6;
+         color: #d4d4d4;
+      }
+      .tribute .fact::before {
+         content: "\1F44A";
+         position: absolute;
+         left: 0;
+      }
+      .tribute .back-link {
+         display: inline-block;
+         margin-top: 2em;
+         color: #5bcefa;
+         text-decoration: none;
+         font-size: 0.9em;
+         transition: color 0.2s;
+      }
+      .tribute .back-link:hover { color: #8edbfc; }
+      .safe-zone {
+         margin-top: 2em;
+         padding: 1.5em;
+         background: rgba(91, 206, 250, 0.08);
+         border: 1px solid rgba(91, 206, 250, 0.2);
+         border-radius: 8px;
+      }
+      .safe-zone p {
+         margin-bottom: 0;
+      }
+      #rickroll-reveal {
+         display: none;
+         margin-top: 1em;
+         font-size: 1.3em;
+         font-weight: 700;
+         color: #ff6b6b;
+         animation: pulseReveal 1s ease-in-out infinite alternate;
+      }
+      @keyframes pulseReveal {
+         from { opacity: 0.7; }
+         to { opacity: 1; }
+      }
+   </style>
+</head>
+
+<body>
+   <main class="container">
+      <picture>
+         <source srcset="/rick.webp" type="image/webp">
+         <img class="rick-bg visible" src="/rick.gif" alt="" aria-hidden="true">
+      </picture>
+      <div class="tribute" id="tribute">
+         <div class="tribute-header">
+            <picture>
+               <source srcset="/logo-200.webp" type="image/webp">
+               <img src="/logo-200.png" alt="W.R.A.A.S. logo" width="80" height="80" class="page-logo">
+            </picture>
+            <div class="tribute-header-text">
+               <h1>In Memoriam</h1>
+               <div class="tagline">Chuck Norris (1940–2026)</div>
+            </div>
+         </div>
+
+         <h2>The One Who Could Never Be Rickrolled</h2>
+         <p>For years, W.R.A.A.S. has maintained a perfect record: every link, every QR code, every fake loading screen — they all lead to Rick. We rickroll absolutely anyone, seriously. But there was always one exception. One man who was immune. One legend who made the rickroll itself flinch.</p>
+         <p>Chuck Norris was that exception. And now that he's gone, the last safe zone on the internet has closed. No one is safe anymore.</p>
+
+         <h2>Chuck Norris Facts (Rickroll Edition)</h2>
+         <div class="facts">
+            <div class="fact">Chuck Norris once clicked a rickroll link. Rick Astley was the one who got rolled.</div>
+            <div class="fact">When Chuck Norris opens YouTube, the algorithm recommends videos to Rick Astley instead.</div>
+            <div class="fact">Chuck Norris doesn't get rickrolled. He rickrolls the rickroll.</div>
+            <div class="fact">Rick Astley once tried to never give Chuck Norris up. Chuck gave him up first.</div>
+            <div class="fact">W.R.A.A.S. used to stand for "We Rickroll Almost Anyone, Seriously." Now no one is safe.</div>
+            <div class="fact">Chuck Norris could close a browser tab and the rickroll would apologize.</div>
+            <div class="fact">The only QR code Chuck Norris ever scanned rickrolled the QR code.</div>
+            <div class="fact">When Chuck Norris visited wraas.click, the GIF paused out of respect.</div>
+         </div>
+
+         <h2>A Rickroll-Free Safe Zone</h2>
+         <div class="safe-zone">
+            <p>In honor of Chuck Norris, this page is a designated rickroll-free safe zone. No tricks. No music. Just respect.</p>
+            <p id="rickroll-reveal">You're not Chuck Norris.</p>
+         </div>
+
+         <div style="display:flex;align-items:center;justify-content:center;gap:1.2em;margin-top:2em;">
+            <a href="/" class="back-link" aria-label="Home" style="margin-top:0;">
+               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </a>
+            <a href="/generate/" class="back-link" aria-label="Generate rickroll link" style="margin-top:0;">
+               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </a>
+            <a href="/about/" class="back-link" aria-label="About W.R.A.A.S." style="margin-top:0;">
+               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </a>
+            <a href="/legal/" class="back-link" aria-label="Legal" style="margin-top:0;">
+               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </a>
+            <a href="/karaoke/" class="back-link" aria-label="Karaoke" style="margin-top:0;">
+               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+            </a>
+         </div>
+      </div>
+   </main>
+   <script>
+      // After ~8 seconds, the "safe zone" betrays the visitor
+      setTimeout(function() {
+         var reveal = document.getElementById("rickroll-reveal");
+         if (!reveal) return;
+         reveal.style.display = "block";
+
+         // Play the rickroll melody via Web Audio API
+         try {
+            var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            var beat = 60 / 113;
+            var eighth = beat / 2;
+            var quarter = beat;
+            var dottedQuarter = beat * 1.5;
+
+            var notes = [
+               { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
+               { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: dottedQuarter },
+               { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 659.25, dur: eighth },
+               { freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 440, dur: quarter },{ freq: 0, dur: quarter },
+               { freq: 440, dur: eighth },{ freq: 493.88, dur: eighth },{ freq: 587.33, dur: eighth },{ freq: 493.88, dur: eighth },
+               { freq: 369.99, dur: quarter },{ freq: 369.99, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 329.63, dur: eighth },
+               { freq: 293.66, dur: eighth },{ freq: 329.63, dur: eighth },{ freq: 293.66, dur: dottedQuarter },{ freq: 0, dur: quarter }
+            ];
+
+            var time = audioCtx.currentTime + 0.1;
+            var gainNode = audioCtx.createGain();
+            gainNode.gain.value = 0.15;
+            gainNode.connect(audioCtx.destination);
+            notes.forEach(function(note) {
+               if (note.freq === 0) { time += note.dur; return; }
+               var osc = audioCtx.createOscillator();
+               osc.type = "square";
+               osc.frequency.value = note.freq;
+               var noteGain = audioCtx.createGain();
+               noteGain.gain.setValueAtTime(0.15, time);
+               noteGain.gain.exponentialRampToValueAtTime(0.01, time + note.dur - 0.02);
+               osc.connect(noteGain);
+               noteGain.connect(gainNode);
+               osc.start(time);
+               osc.stop(time + note.dur);
+               time += note.dur;
+            });
+         } catch (e) {
+            // Web Audio not supported — the text reveal is enough
+         }
+      }, 8000);
+   </script>
+   <!-- GoatCounter analytics: SRI integrity hash pins the script to a known version.
+        If analytics stops working, the hash may be stale — the check-sri workflow
+        detects this daily and opens a PR to update it. -->
+   <script data-goatcounter="https://wraas.goatcounter.com/count"
+           async src="//gc.zgo.at/count.js"
+           integrity="sha384-DGiREytotlUiLflu8vLo0vvfxKWn36pKPT1ZBhh3R+3vhwrS/4p3H9eys9Zr2bPQ"
+           crossorigin="anonymous"></script>
+</body>
+
+</html>

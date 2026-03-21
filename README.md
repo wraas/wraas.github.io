@@ -72,6 +72,7 @@ Certain URL paths show a fake loading screen (white page, spinner, contextual te
 | [`/clickbait`](https://wraas.github.io/clickbait)           | "Loading exclusive content..."   | 2.5s  |
 | [`/karaoke`](https://wraas.github.io/karaoke)               | "Warming up the mic..."          | 2.0s  |
 | [`/about`](https://wraas.github.io/about)                   | "Loading the manifesto..."       | 2.0s  |
+| [`/chuck`](https://wraas.github.io/chuck)                   | "Paying respects to the legend..." | 2.5s  |
 
 Any other path (e.g. `/quarterly-report`, `/onboarding-form`) skips the loading screen and goes straight to Rick.
 
@@ -127,6 +128,7 @@ Developers who inspect the site get rickrolled too:
 - **HTTP headers** — The dev server adds `X-Rickroll`, `X-Song-BPM`, and `X-Lyrics` headers to every response (visible via `curl -I` or the Network tab)
 - **[`/humans.txt`](https://wraas.github.io/humans.txt)** — Standard `humans.txt` format listing Rick Astley as the team
 - **[`/.well-known/security.txt`](https://wraas.github.io/.well-known/security.txt)** — Security contact points to the YouTube video
+- **Chuck Norris easter egg** — Type "chuck" or "norris" on any rickroll page to trigger a full-screen Chuck Norris fact overlay, followed by an intensified rickroll (zoom + brightness)
 
 ### CI/CD
 
@@ -180,6 +182,8 @@ site/
 │   └── security.txt      # Rickrolled security.txt
 ├── about/
 │   └── index.html        # The W.R.A.A.S. manifesto (also a rickroll)
+├── chuck/
+│   └── index.html        # Chuck Norris tribute page (In Memoriam)
 ├── generate/
 │   └── index.html        # Link disguise generator tool
 └── karaoke/

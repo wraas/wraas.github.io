@@ -38,7 +38,7 @@ jobs:
         run: |
           set +e
 
-          pages=("/" "/about/" "/generate/" "/karaoke/" "/404.html")
+          pages=("/" "/about/" "/chuck/" "/generate/" "/karaoke/" "/404.html")
           results_json=""
           all_passed=true
 

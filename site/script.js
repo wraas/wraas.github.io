@@ -58,6 +58,12 @@
             fakeDelay: 2000,
             title: "About W.R.A.A.S. — Our Mission",
             desc: "We Rickroll Absolutely Anyone, Seriously. The manifesto behind the platform."
+        },
+        "/chuck": {
+            loadingText: "Paying respects to the legend...",
+            fakeDelay: 2500,
+            title: "In Memoriam — Chuck Norris",
+            desc: "The only man who could never be rickrolled. Now, no one is safe."
         }
     };
 
@@ -659,5 +665,59 @@
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js').catch(function() {});
         }
+
+        // --- Chuck Norris easter egg: type "chuck" or "norris" anywhere ---
+        var chuckFacts = [
+            "Chuck Norris once clicked a rickroll link. Rick Astley was the one who got rolled.",
+            "Chuck Norris doesn't get rickrolled. He rickrolls the rickroll.",
+            "When Chuck Norris opens YouTube, the algorithm recommends videos to Rick Astley instead.",
+            "The only QR code Chuck Norris ever scanned rickrolled the QR code.",
+            "Chuck Norris could close a browser tab and the rickroll would apologize.",
+            "W.R.A.A.S. used to stand for \"We Rickroll Almost Anyone, Seriously.\" Now no one is safe.",
+            "Rick Astley once tried to never give Chuck Norris up. Chuck gave him up first.",
+            "When Chuck Norris visited wraas.click, the GIF paused out of respect."
+        ];
+        var keyBuffer = "";
+        document.addEventListener("keydown", function(e) {
+            if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+            keyBuffer += e.key.toLowerCase();
+            if (keyBuffer.length > 20) keyBuffer = keyBuffer.slice(-20);
+            if (keyBuffer.indexOf("chuck") !== -1 || keyBuffer.indexOf("norris") !== -1) {
+                keyBuffer = "";
+                trackEvent("chuck-easter-egg", "Chuck Norris easter egg triggered");
+
+                // Show overlay with random fact
+                var overlay = document.createElement("div");
+                overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;z-index:200;"
+                    + "background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;"
+                    + "padding:2em;text-align:center;cursor:pointer;";
+                var fact = chuckFacts[Math.floor(Math.random() * chuckFacts.length)];
+                overlay.innerHTML = '<div style="max-width:500px;">'
+                    + '<div style="font-size:2em;margin-bottom:0.5em;">&#x1F44A;</div>'
+                    + '<div style="color:#fff;font-size:1.3em;font-weight:700;line-height:1.5;">' + fact + '</div>'
+                    + '<div style="color:#888;font-size:0.8em;margin-top:1em;">Click or wait to dismiss</div>'
+                    + '</div>';
+                document.body.appendChild(overlay);
+                overlay.addEventListener("click", function() { dismiss(); });
+
+                var dismissed = false;
+                function dismiss() {
+                    if (dismissed) return;
+                    dismissed = true;
+                    overlay.remove();
+                    // Intensify the rickroll
+                    var bg = document.querySelector(".rick-bg");
+                    if (bg) {
+                        bg.style.transform = "translate(-50%, -50%) scale(1.15)";
+                        bg.style.filter = "brightness(1.4)";
+                        setTimeout(function() {
+                            bg.style.transform = "translate(-50%, -50%)";
+                            bg.style.filter = "";
+                        }, 3000);
+                    }
+                }
+                setTimeout(dismiss, 3000);
+            }
+        });
     });
 })();

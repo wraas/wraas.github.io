@@ -41,7 +41,7 @@ No runtime dependencies. Unit tests use the Node.js built-in test runner.
 E2E tests for all themed scenarios.
 
 **Coverage:**
-- All 8 theme variations (`/meeting`, `/document`, `/password-reset`, `/invoice`, `/survey`, `/clickbait`, `/karaoke`, `/about`)
+- All 9 theme variations (`/meeting`, `/document`, `/password-reset`, `/invoice`, `/survey`, `/clickbait`, `/karaoke`, `/about`, `/chuck`)
 - Base URL (no theme) — direct rickroll without fake loading
 - Fake loading overlay visibility and text content
 - Rickroll reveal timing and visibility
@@ -119,6 +119,7 @@ Accessibility audits using axe-core.
 | Clickbait | 2500ms |
 | Karaoke | 2000ms |
 | About | 2000ms |
+| Chuck | 2500ms |
 
 ### Rickroll reveal timing
 
