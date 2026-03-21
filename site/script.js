@@ -695,10 +695,20 @@
                 overlay.innerHTML = '<div style="max-width:500px;">'
                     + '<div style="font-size:2em;margin-bottom:0.5em;">&#x1F44A;</div>'
                     + '<div style="color:#fff;font-size:1.3em;font-weight:700;line-height:1.5;">' + fact + '</div>'
-                    + '<div style="color:#888;font-size:0.8em;margin-top:1em;">Click or wait to dismiss</div>'
+                    + '<a href="/chuck/" id="chuck-tribute-link" style="display:inline-block;margin-top:1em;color:#5bcefa;font-size:0.85em;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color=\'#8edbfc\'" onmouseout="this.style.color=\'#5bcefa\'">Pay your respects</a>'
+                    + '<div style="color:#888;font-size:0.7em;margin-top:0.6em;">Click or wait to dismiss</div>'
                     + '</div>';
                 document.body.appendChild(overlay);
-                overlay.addEventListener("click", function() { dismiss(); });
+                var tributeLink = document.getElementById("chuck-tribute-link");
+                if (tributeLink) {
+                    tributeLink.addEventListener("click", function() {
+                        trackEvent("chuck-tribute-link", "Chuck tribute link clicked from easter egg");
+                    });
+                }
+                overlay.addEventListener("click", function(e) {
+                    if (e.target.id === "chuck-tribute-link") return;
+                    dismiss();
+                });
 
                 var dismissed = false;
                 function dismiss() {

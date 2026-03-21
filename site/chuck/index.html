@@ -210,6 +210,11 @@
          if (!reveal) return;
          reveal.style.display = "block";
 
+         // Track the rickroll reveal
+         if (typeof goatcounter !== "undefined" && goatcounter.count) {
+            goatcounter.count({ path: "chuck-safe-zone-reveal", title: "Chuck safe zone rickroll triggered", event: true });
+         }
+
          // Play the rickroll melody via Web Audio API
          try {
             var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
