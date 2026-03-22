@@ -19,75 +19,21 @@ jobs:
         with:
           tool: just
 
-      - name: Build site
-        run: just build
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 'lts/*'
 
-      - name: Start local server
-        id: server
-        run: |
-          cd _site
-          python3 -m http.server 8000 > /dev/null 2>&1 &
-          echo "pid=$!" >> $GITHUB_OUTPUT
-          sleep 2
-
-      - name: Install Lighthouse
-        run: npm install -g lighthouse
-
-      - name: Run Lighthouse on key pages
+      - name: Run Lighthouse
         id: lighthouse
+        run: just lighthouse
+
+      - name: Load results for PR comment
+        if: always() && github.event_name == 'pull_request'
         run: |
-          set +e
-
-          pages=("/" "/about/" "/chuck/" "/generate/" "/karaoke/" "/404.html")
-          results_json=""
-          all_passed=true
-
-          for page in "${pages[@]}"; do
-            url="http://localhost:8000${page}"
-            echo "Testing $url..."
-
-            lighthouse "$url" \
-              --chrome-flags="--headless=new --no-sandbox" \
-              --output=json \
-              --output-path=/tmp/lighthouse-${page//\//-}.json \
-              --disable-full-page-screenshot \
-              --throttling-method=devtools \
-              > /dev/null 2>&1 || true
-
-            if [ -f "/tmp/lighthouse-${page//\//-}.json" ]; then
-              perf=$(jq '.categories.performance.score * 100' "/tmp/lighthouse-${page//\//-}.json")
-              access=$(jq '.categories.accessibility.score * 100' "/tmp/lighthouse-${page//\//-}.json")
-              bp=$(jq '.categories."best-practices".score * 100' "/tmp/lighthouse-${page//\//-}.json")
-              seo=$(jq '.categories.seo.score * 100' "/tmp/lighthouse-${page//\//-}.json")
-
-              printf "Page: %-20s | Performance: %3.0f | Accessibility: %3.0f | Best Practices: %3.0f | SEO: %3.0f\n" "$page" "$perf" "$access" "$bp" "$seo"
-
-              if (( $(echo "$perf < 90" | bc -l) )); then
-                all_passed=false
-              fi
-              if (( $(echo "$access < 90" | bc -l) )); then
-                all_passed=false
-              fi
-              if (( $(echo "$bp < 90" | bc -l) )); then
-                all_passed=false
-              fi
-
-              results_json+="
-          - **$page**: Performance $perf, Accessibility $access, Best Practices $bp, SEO $seo"
-            fi
-          done
-
-          if [ "$all_passed" = false ]; then
-            echo "LIGHTHOUSE_RESULTS<<EOF" >> $GITHUB_ENV
-            echo "$results_json" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-            echo "All Lighthouse checks must have scores >= 90"
-            exit 1
-          else
-            echo "LIGHTHOUSE_RESULTS<<EOF" >> $GITHUB_ENV
-            echo "$results_json" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-          fi
+          echo "LIGHTHOUSE_RESULTS<<EOF" >> $GITHUB_ENV
+          cat /tmp/lighthouse-results.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Comment on pull request with results
         if: always() && github.event_name == 'pull_request'
@@ -126,7 +72,3 @@ jobs:
                 body: bodyWithMarker,
               });
             }
-
-      - name: Cleanup
-        if: always()
-        run: kill "${{ steps.server.outputs.pid }}" 2>/dev/null || true

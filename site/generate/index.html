@@ -123,7 +123,7 @@
 
         .copy-btn {
             padding: 0.7em 1.2em;
-            background: #5bcefa;
+            background: #1a7abf;
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -177,7 +177,7 @@
             padding: 0.3em 0.8em;
             background: transparent;
             border: none;
-            color: #555;
+            color: #999;
             font-size: 0.75em;
             cursor: pointer;
             transition: color 0.2s;
@@ -209,14 +209,14 @@
         }
 
         .preview-card-domain {
-            color: #555;
+            color: #999;
             font-size: 0.75em;
             margin-top: 0.5em;
         }
 
         .preview-label {
             font-size: 0.75em;
-            color: #555;
+            color: #999;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             margin-bottom: 0.5em;
@@ -243,10 +243,36 @@
             0%, 100% { opacity: 0.5; }
             50% { opacity: 1; }
         }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            z-index: 100;
+            font-size: 0.9em;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        .nav-link {
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus-visible {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
     </style>
 </head>
 
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <main id="main-content">
     <div class="page-header">
         <picture>
             <source srcset="/logo-200.webp" type="image/webp">
@@ -292,7 +318,7 @@
         <div class="output-group">
             <div class="output-label">Your link</div>
             <div class="output-box">
-                <div class="output-url" id="output-url"></div>
+                <code class="output-url" id="output-url" aria-label="Generated rickroll URL"></code>
                 <button class="copy-btn" id="copy-btn">Copy</button>
             </div>
         </div>
@@ -307,30 +333,31 @@
                     <div class="preview-card-domain" id="preview-domain"></div>
                 </div>
                 <div class="qr-col">
-                    <canvas id="qr-canvas" class="qr-canvas" width="200" height="200"></canvas>
-                    <button class="qr-download" id="qr-download">Save as PNG</button>
+                    <canvas id="qr-canvas" class="qr-canvas" width="200" height="200" role="img" aria-label="QR code for generated rickroll link"></canvas>
+                    <button class="qr-download" id="qr-download" aria-label="Download QR code as PNG image">Save as PNG</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div style="display:flex;align-items:center;justify-content:center;gap:1.2em;margin-top:2em;margin-bottom:1em;">
-        <a href="/" aria-label="Home" style="color:rgba(255,255,255,0.4);text-decoration:none;display:flex;transition:color 0.3s;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">
+    <nav class="bottom-nav" style="display:flex;align-items:center;justify-content:center;gap:1.2em;margin-top:2em;margin-bottom:1em;" aria-label="Site navigation">
+        <a href="/" aria-label="Home" class="nav-link" style="color:rgba(255,255,255,0.6);text-decoration:none;display:flex;">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         </a>
-        <a href="/about/" aria-label="About W.R.A.A.S." style="color:rgba(255,255,255,0.4);text-decoration:none;display:flex;transition:color 0.3s;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">
+        <a href="/about/" aria-label="About W.R.A.A.S." class="nav-link" style="color:rgba(255,255,255,0.6);text-decoration:none;display:flex;">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
         </a>
-        <a href="/legal/" aria-label="Legal" style="color:rgba(255,255,255,0.4);text-decoration:none;display:flex;transition:color 0.3s;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">
+        <a href="/legal/" aria-label="Legal" class="nav-link" style="color:rgba(255,255,255,0.6);text-decoration:none;display:flex;">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         </a>
-        <a href="/chuck/" aria-label="Chuck Norris tribute" style="color:rgba(255,255,255,0.4);text-decoration:none;display:flex;transition:color 0.3s;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">
+        <a href="/chuck/" aria-label="Chuck Norris tribute" class="nav-link" style="color:rgba(255,255,255,0.6);text-decoration:none;display:flex;">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </a>
-        <a href="/karaoke/" aria-label="Karaoke" style="color:rgba(255,255,255,0.4);text-decoration:none;display:flex;transition:color 0.3s;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">
+        <a href="/karaoke/" aria-label="Karaoke" class="nav-link" style="color:rgba(255,255,255,0.6);text-decoration:none;display:flex;">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
         </a>
-    </div>
+    </nav>
+    </main>
 
 <script>
         // --- Minimal QR Code generator (no external dependencies) ---
@@ -868,13 +895,15 @@
                 var banner = document.createElement("div");
                 banner.id = "audio-hint";
                 banner.style.cssText = "position:fixed;bottom:0;left:0;width:100%;z-index:50;background:#2b2d42;color:#edf2f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;box-shadow:0 -2px 12px rgba(0,0,0,0.4);";
+                banner.setAttribute("role", "region");
+                banner.setAttribute("aria-label", "Cookie consent");
                 banner.innerHTML = '<div style="flex:1;min-width:200px;">'
                     + '<div style="font-size:14px;font-weight:600;margin-bottom:4px;">We value your privacy (when aligned with our profits)</div>'
                     + '<div style="font-size:12px;opacity:0.8;">We use cookies to <s>track you</s> enhance your browsing experience. Your choice won\'t be remembered because, frankly, nobody cares. You\'ll see this again next time. Such is life. <a href="#" id="audio-hint-policy" style="color:#8ecae6;text-decoration:underline;">Cookie Policy</a></div>'
                     + '</div>'
                     + '<div style="display:flex;gap:8px;flex-shrink:0;">'
                     + '<button id="audio-hint-reject" style="background:transparent;border:1px solid #8d99ae;color:#edf2f4;padding:8px 20px;border-radius:4px;font-size:13px;cursor:pointer;">Reject All</button>'
-                    + '<button id="audio-hint-accept" style="background:#5bcefa;border:none;color:#fff;padding:8px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">Accept All</button>'
+                    + '<button id="audio-hint-accept" style="background:#1a7abf;border:none;color:#fff;padding:8px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">Accept All</button>'
                     + '</div>';
                 document.body.appendChild(banner);
                 function onConsent() {
@@ -923,9 +952,14 @@
             ];
             var lineIndex = 0;
 
+            // Create a hidden container for floating lyrics (decorative only)
+            var lyricsContainer = document.createElement("div");
+            lyricsContainer.setAttribute("aria-hidden", "true");
+            lyricsContainer.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;";
+            document.querySelector("main").appendChild(lyricsContainer);
+
             function spawnLyric() {
-                var line = document.createElement("a");
-                line.href = "/";
+                var line = document.createElement("span");
                 line.textContent = lyrics[lineIndex % lyrics.length];
                 lineIndex++;
 
@@ -937,7 +971,7 @@
                 line.style.cssText = "position:fixed;top:" + top + "%;left:" + left + "%;"
                     + "color:rgba(255,255,255,0.15);font-size:" + size + "em;"
                     + "text-decoration:none;pointer-events:auto;white-space:nowrap;"
-                    + "z-index:0;transition:color 0.3s,transform 0.3s;"
+                    + "z-index:0;transition:color 0.3s,transform 0.3s;cursor:pointer;"
                     + "animation:floatLyric " + duration + "s linear forwards;";
 
                 line.addEventListener("mouseenter", function() {
@@ -948,8 +982,9 @@
                     line.style.color = "rgba(255,255,255,0.06)";
                     line.style.transform = "scale(1)";
                 });
+                line.addEventListener("click", function() { window.location.href = "/"; });
 
-                document.body.appendChild(line);
+                lyricsContainer.appendChild(line);
                 setTimeout(function() { line.remove(); }, duration * 1000);
             }
 
@@ -963,7 +998,7 @@
                 + "}";
             document.head.appendChild(style);
 
-            spawnLyric();
+            setTimeout(spawnLyric, 2000);
             setInterval(spawnLyric, 3000);
         })();
     </script>

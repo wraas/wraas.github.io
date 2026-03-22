@@ -446,13 +446,15 @@
         var banner = document.createElement("div");
         banner.id = "audio-hint";
         banner.style.cssText = "position:fixed;bottom:0;left:0;width:100%;z-index:50;background:#2b2d42;color:#edf2f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;box-shadow:0 -2px 12px rgba(0,0,0,0.4);";
+        banner.setAttribute("role", "region");
+        banner.setAttribute("aria-label", "Cookie consent");
         banner.innerHTML = '<div style="flex:1;min-width:200px;">'
             + '<div style="font-size:14px;font-weight:600;margin-bottom:4px;">We value your privacy (when aligned with our profits)</div>'
             + '<div style="font-size:12px;opacity:0.8;">We use cookies to <s>track you</s> enhance your browsing experience. Your choice won\'t be remembered because, frankly, nobody cares. You\'ll see this again next time. Such is life. <a href="#" id="audio-hint-policy" style="color:#8ecae6;text-decoration:underline;">Cookie Policy</a></div>'
             + '</div>'
             + '<div style="display:flex;gap:8px;flex-shrink:0;">'
             + '<button id="audio-hint-reject" style="background:transparent;border:1px solid #8d99ae;color:#edf2f4;padding:8px 20px;border-radius:4px;font-size:13px;cursor:pointer;">Reject All</button>'
-            + '<button id="audio-hint-accept" style="background:#5bcefa;border:none;color:#fff;padding:8px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">Accept All</button>'
+            + '<button id="audio-hint-accept" style="background:#1a7abf;border:none;color:#fff;padding:8px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">Accept All</button>'
             + '</div>';
         document.body.appendChild(banner);
         // Push bottom-links above the banner

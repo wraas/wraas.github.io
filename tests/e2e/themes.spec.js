@@ -37,18 +37,8 @@ const themes = [
     loadingText: 'Loading exclusive content...',
     fakeDelay: 2500,
   },
-  {
-    path: '/karaoke',
-    name: 'karaoke',
-    loadingText: 'Warming up the mic...',
-    fakeDelay: 2000,
-  },
-  {
-    path: '/about',
-    name: 'about',
-    loadingText: 'Loading the manifesto...',
-    fakeDelay: 2000,
-  },
+  // karaoke and about are standalone pages with their own layouts,
+  // they don't use the shared fake-loading overlay from index.html
 ];
 
 test.describe('Theme Scenarios', () => {

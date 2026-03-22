@@ -26,49 +26,39 @@ test.describe('Audio Synthesis Tests', () => {
       440,    // A4
     ];
 
-    // Inject a test harness to track oscillator frequencies
+    // Wait for consent banner to appear, then inject harness and trigger audio
     const frequencies = await page.evaluate(() => {
       return new Promise((resolve) => {
         const recordedFreqs = [];
-        const originalCreateOscillator = window.AudioContext.prototype.createOscillator ||
-                                         window.webkitAudioContext.prototype.createOscillator;
+        const OrigAudioContext = window.AudioContext || window.webkitAudioContext;
+        const originalCreateOscillator = OrigAudioContext.prototype.createOscillator;
 
-        const patchedCreateOscillator = function() {
+        OrigAudioContext.prototype.createOscillator = function() {
           const osc = originalCreateOscillator.call(this);
-          const originalFrequencyGetter = Object.getOwnPropertyDescriptor(
-            Object.getPrototypeOf(osc),
-            'frequency'
+          // Record the frequency value when it's set
+          const freqParam = osc.frequency;
+          const origSetValue = Object.getOwnPropertyDescriptor(
+            AudioParam.prototype, 'value'
           );
-
-          if (originalFrequencyGetter && originalFrequencyGetter.get) {
-            Object.defineProperty(osc, 'frequency', {
-              get() {
-                return originalFrequencyGetter.get.call(this);
-              },
-              set(value) {
-                if (typeof value === 'number' && value > 0) {
-                  recordedFreqs.push(Math.round(value * 100) / 100);
+          if (origSetValue && origSetValue.set) {
+            Object.defineProperty(freqParam, 'value', {
+              get() { return origSetValue.get.call(this); },
+              set(v) {
+                if (typeof v === 'number' && v > 0) {
+                  recordedFreqs.push(Math.round(v * 100) / 100);
                 }
-                return originalFrequencyGetter.set.call(this, value);
+                origSetValue.set.call(this, v);
               },
             });
           }
-
           return osc;
         };
 
-        if (window.AudioContext) {
-          window.AudioContext.prototype.createOscillator = patchedCreateOscillator;
-        }
-        if (window.webkitAudioContext) {
-          window.webkitAudioContext.prototype.createOscillator = patchedCreateOscillator;
-        }
-
-        // Trigger audio by clicking mute button
+        // Trigger audio via consent banner accept button
         setTimeout(() => {
-          const muteBtn = document.querySelector('.mute-btn');
-          if (muteBtn) {
-            muteBtn.click();
+          const acceptBtn = document.querySelector('#audio-hint-accept');
+          if (acceptBtn) {
+            acceptBtn.click();
             // Wait for frequencies to be recorded
             setTimeout(() => resolve(recordedFreqs), 3000);
           } else {
@@ -88,7 +78,7 @@ test.describe('Audio Synthesis Tests', () => {
       const found = frequencies.some(
         (f) => Math.abs(f - expected) < 1
       );
-      expect(found).toBeTruthy(`Should find frequency ~${expected} Hz`);
+      expect(found).toBeTruthy();
     }
   });
 
@@ -122,19 +112,27 @@ test.describe('Audio Synthesis Tests', () => {
     // Initial state should be "Unmute audio"
     await expect(muteBtn).toHaveAttribute('aria-label', 'Unmute audio');
 
-    // Click to unmute (play audio)
-    await muteBtn.click();
+    // Accept consent to start audio playback
+    const acceptBtn = page.locator('#audio-hint-accept');
+    await acceptBtn.click();
     await page.waitForTimeout(500);
 
-    // Label should change to "Mute audio"
+    // After consent, label should be "Mute audio" (audio is playing)
     await expect(muteBtn).toHaveAttribute('aria-label', 'Mute audio');
 
-    // Click again to mute
+    // Click to mute
     await muteBtn.click();
     await page.waitForTimeout(500);
 
-    // Label should change back to "Unmute audio"
+    // Label should change to "Unmute audio"
     await expect(muteBtn).toHaveAttribute('aria-label', 'Unmute audio');
+
+    // Click to unmute
+    await muteBtn.click();
+    await page.waitForTimeout(500);
+
+    // Label should change back to "Mute audio"
+    await expect(muteBtn).toHaveAttribute('aria-label', 'Mute audio');
   });
 
   test('consent banner triggers audio playback', async ({ page }) => {
@@ -164,9 +162,7 @@ test.describe('Audio Synthesis Tests', () => {
   });
 
   test('reject button also triggers audio playback', async ({ page }) => {
-    // Navigate to about page to get fresh consent banner
-    await page.goto('/about/');
-
+    // Use base URL which has the consent banner (about page is standalone)
     const rejectBtn = page.locator('#audio-hint-reject');
     await expect(rejectBtn).toBeVisible();
 

@@ -145,7 +145,8 @@
 </head>
 
 <body>
-   <main class="container">
+   <a href="#main-content" class="skip-link">Skip to main content</a>
+   <main id="main-content" class="container">
       <picture>
          <source srcset="/rick.webp" type="image/webp">
          <img class="rick-bg visible" src="/rick.gif" alt="" aria-hidden="true">
@@ -181,7 +182,7 @@
          <h2>A Rickroll-Free Safe Zone</h2>
          <div class="safe-zone">
             <p>In honor of Chuck Norris, this page is a designated rickroll-free safe zone. No tricks. No music. Just respect.</p>
-            <p id="rickroll-reveal">You're not Chuck Norris.</p>
+            <p id="rickroll-reveal" aria-live="assertive">You're not Chuck Norris.</p>
          </div>
 
          <div style="display:flex;align-items:center;justify-content:center;gap:1.2em;margin-top:2em;">

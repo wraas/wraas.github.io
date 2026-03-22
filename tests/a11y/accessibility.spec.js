@@ -224,12 +224,12 @@ test.describe('Accessibility Audit', () => {
 
     await page.waitForTimeout(2500);
 
-    // Bottom links should have text
+    // Bottom links should have aria-labels (they use SVG icons, not text)
     const generateLink = page.locator('.generate-link');
     const aboutLink = page.locator('.about-link');
 
-    await expect(generateLink).toContainText('Create your own rickroll link');
-    await expect(aboutLink).toContainText('About W.R.A.A.S.');
+    await expect(generateLink).toHaveAttribute('aria-label', /rickroll|generate/i);
+    await expect(aboutLink).toHaveAttribute('aria-label', /About W\.R\.A\.A\.S\./);
 
     // Karaoke link has aria-label
     const karaokeLink = page.locator('.karaoke-link');

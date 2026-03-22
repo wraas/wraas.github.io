@@ -68,7 +68,10 @@ test.describe('Link Generator (/generate/) Integration', () => {
     expect(titleText).toEqual("You've been invited to a meeting");
   });
 
-  test('copy button copies URL to clipboard', async ({ page, context }) => {
+  test('copy button copies URL to clipboard', async ({ page, context, browserName }) => {
+    // Firefox doesn't support clipboard-read permission via grantPermissions
+    test.skip(browserName === 'firefox', 'Firefox does not support clipboard-read permission');
+
     const copyBtn = page.locator('#copy-btn');
     const outputUrl = page.locator('#output-url');
 
@@ -89,29 +92,28 @@ test.describe('Link Generator (/generate/) Integration', () => {
     expect(clipboardText).toEqual(urlText);
   });
 
-  test('copy button shows feedback', async ({ page }) => {
+  test('copy button shows feedback', async ({ page, context, browserName }) => {
     const copyBtn = page.locator('#copy-btn');
 
     // Initial state
-    let btnText = await copyBtn.textContent();
-    expect(btnText).toEqual('Copy');
-    expect(copyBtn).not.toHaveClass(/copied/);
+    await expect(copyBtn).toHaveText('Copy');
+    await expect(copyBtn).not.toHaveClass(/copied/);
+
+    // Grant clipboard permissions so writeText resolves (Chromium only; Firefox doesn't support this)
+    if (browserName === 'chromium') {
+      await context.grantPermissions(['clipboard-write']);
+    }
 
     // Click copy button
     await copyBtn.click();
-    await page.waitForTimeout(300);
 
-    // Should show "Copied!"
-    btnText = await copyBtn.textContent();
-    expect(btnText).toEqual('Copied!');
+    // Should show "Copied!" (auto-retrying assertion for async clipboard write)
+    await expect(copyBtn).toHaveText('Copied!');
     await expect(copyBtn).toHaveClass(/copied/);
 
     // Wait for feedback to disappear
-    await page.waitForTimeout(2000);
-
-    btnText = await copyBtn.textContent();
-    expect(btnText).toEqual('Copy');
-    expect(copyBtn).not.toHaveClass(/copied/);
+    await expect(copyBtn).toHaveText('Copy', { timeout: 5000 });
+    await expect(copyBtn).not.toHaveClass(/copied/);
   });
 
   test('QR code canvas is rendered non-empty', async ({ page }) => {
@@ -142,18 +144,19 @@ test.describe('Link Generator (/generate/) Integration', () => {
       return false;
     });
 
-    expect(hasData).toBeTruthy('QR code should have rendered data');
+    expect(hasData).toBeTruthy();
   });
 
   test('QR code updates when URL changes', async ({ page }) => {
     const qrCanvas = page.locator('#qr-canvas');
 
-    // Get initial QR data
+    // Get initial QR data (sample from center of canvas to avoid white padding)
     const initialData = await qrCanvas.evaluate((canvas) => {
       const ctx = canvas.getContext('2d');
       if (!ctx) return null;
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      return JSON.stringify(imageData.data.slice(0, 100)); // First 100 bytes
+      const midY = Math.floor(canvas.height / 2);
+      const imageData = ctx.getImageData(0, midY, canvas.width, 1);
+      return JSON.stringify(Array.from(imageData.data));
     });
 
     // Change custom path
@@ -165,8 +168,9 @@ test.describe('Link Generator (/generate/) Integration', () => {
     const newData = await qrCanvas.evaluate((canvas) => {
       const ctx = canvas.getContext('2d');
       if (!ctx) return null;
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      return JSON.stringify(imageData.data.slice(0, 100));
+      const midY = Math.floor(canvas.height / 2);
+      const imageData = ctx.getImageData(0, midY, canvas.width, 1);
+      return JSON.stringify(Array.from(imageData.data));
     });
 
     // QR codes should be different
