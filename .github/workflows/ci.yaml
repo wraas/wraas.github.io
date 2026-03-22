@@ -40,6 +40,8 @@ jobs:
             | grep -v 'lyricsondemand\.com' \
             | grep -v 'goatcounter\.com' \
             | grep -v 'gc\.zgo\.at' \
+            | grep -v '^https://fonts\.googleapis\.com$' \
+            | grep -v '^https://fonts\.gstatic\.com$' \
             | sort -u || true)
 
           if [ -z "$urls" ]; then
