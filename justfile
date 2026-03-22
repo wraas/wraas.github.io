@@ -209,22 +209,41 @@ lighthouse: build
         url="http://localhost:{{ port }}${page}"
         echo "Testing $url..."
 
+        base_path="/tmp/lighthouse-${page//\//-}"
         npx lighthouse "$url" \
             --chrome-flags="--headless=new --no-sandbox" \
-            --output=json \
-            --output-path=/tmp/lighthouse-${page//\//-}.json \
+            --output=json,html \
+            --output-path="$base_path" \
             --disable-full-page-screenshot \
             --throttling-method=devtools \
             > /dev/null 2>&1 || true
 
-        if [ -f "/tmp/lighthouse-${page//\//-}.json" ]; then
-            perf=$(jq '.categories.performance.score * 100' "/tmp/lighthouse-${page//\//-}.json")
-            access=$(jq '.categories.accessibility.score * 100' "/tmp/lighthouse-${page//\//-}.json")
-            bp=$(jq '.categories."best-practices".score * 100' "/tmp/lighthouse-${page//\//-}.json")
-            seo=$(jq '.categories.seo.score * 100' "/tmp/lighthouse-${page//\//-}.json")
+        json_file="${base_path}.report.json"
+        if [ -f "$json_file" ]; then
+            perf=$(jq '.categories.performance.score * 100' "$json_file")
+            access=$(jq '.categories.accessibility.score * 100' "$json_file")
+            bp=$(jq '.categories."best-practices".score * 100' "$json_file")
+            seo=$(jq '.categories.seo.score * 100' "$json_file")
 
             printf "Page: %-20s | Perf: %3.0f | A11y: %3.0f | BP: %3.0f | SEO: %3.0f\n" "$page" "$perf" "$access" "$bp" "$seo"
             results_md+=$'\n'"- **$page**: Performance $perf, Accessibility $access, Best Practices $bp, SEO $seo"
+
+            # Extract failing audits for categories below 90
+            failing_audits=$(jq -r '
+                .audits as $audits |
+                .categories | to_entries[] | select(.value.score < 0.9) |
+                .key as $cat |
+                [.value.auditRefs[].id |
+                 $audits[.] |
+                 select(.score != null and .score < 0.9) |
+                 "    - " + .title + " (" + (.score * 100 | floor | tostring) + ")"] |
+                select(length > 0) |
+                "  - **" + $cat + "**:\n" + join("\n")
+            ' "$json_file" 2>/dev/null || true)
+
+            if [ -n "$failing_audits" ]; then
+                results_md+=$'\n'"  <details><summary>Failing audits</summary>"$'\n'$'\n'"$failing_audits"$'\n'"  </details>"
+            fi
 
             for score in "$perf" "$access" "$bp"; do
                 if (( $(echo "$score < 90" | bc -l) )); then
