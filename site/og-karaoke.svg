@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- Gradient background -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a0533"/>
+      <stop offset="100%" stop-color="#0d1b2a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Decorative circles -->
+  <circle cx="150" cy="100" r="80" fill="#e040fb" opacity="0.06"/>
+  <circle cx="1050" cy="530" r="120" fill="#00e5ff" opacity="0.06"/>
+  <circle cx="900" cy="80" r="60" fill="#ff4081" opacity="0.05"/>
+  <!-- Card -->
+  <rect x="60" y="40" width="1080" height="550" rx="16" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <!-- Microphone icon -->
+  <g transform="translate(556, 110)" fill="none" stroke="#e040fb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="16" y="0" width="24" height="36" rx="12" fill="rgba(224,64,251,0.15)"/>
+    <path d="M8 28v4a20 20 0 0 0 40 0v-4"/>
+    <line x1="28" y1="52" x2="28" y2="64"/>
+    <line x1="18" y1="64" x2="38" y2="64"/>
+  </g>
+  <!-- Title -->
+  <text x="600" y="260" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="48" fill="#fff" font-weight="bold" text-anchor="middle">Karaoke Night</text>
+  <!-- Subtitle -->
+  <text x="600" y="310" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" fill="#b0b0c8" text-anchor="middle">Pick your song. Grab the mic. Sing your heart out.</text>
+  <!-- Song tags -->
+  <g transform="translate(300, 360)">
+    <rect x="0" y="0" width="100" height="36" rx="18" fill="rgba(224,64,251,0.15)" stroke="#e040fb" stroke-width="1"/>
+    <text x="50" y="23" font-family="sans-serif" font-size="14" fill="#e040fb" text-anchor="middle">Rock</text>
+    <rect x="120" y="0" width="100" height="36" rx="18" fill="rgba(0,229,255,0.15)" stroke="#00e5ff" stroke-width="1"/>
+    <text x="170" y="23" font-family="sans-serif" font-size="14" fill="#00e5ff" text-anchor="middle">Pop</text>
+    <rect x="240" y="0" width="100" height="36" rx="18" fill="rgba(255,64,129,0.15)" stroke="#ff4081" stroke-width="1"/>
+    <text x="290" y="23" font-family="sans-serif" font-size="14" fill="#ff4081" text-anchor="middle">Ballad</text>
+    <rect x="360" y="0" width="120" height="36" rx="18" fill="rgba(105,240,174,0.15)" stroke="#69f0ae" stroke-width="1"/>
+    <text x="420" y="23" font-family="sans-serif" font-size="14" fill="#69f0ae" text-anchor="middle">Disco</text>
+  </g>
+  <!-- CTA -->
+  <rect x="460" y="440" width="280" height="54" rx="27" fill="#e040fb"/>
+  <text x="600" y="474" font-family="sans-serif" font-size="18" fill="#fff" font-weight="bold" text-anchor="middle">Browse Song Catalog</text>
+  <!-- Song count -->
+  <text x="600" y="540" font-family="sans-serif" font-size="14" fill="#666" text-anchor="middle">20+ songs available — free, no signup required</text>
+</svg>

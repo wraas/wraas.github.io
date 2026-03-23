@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#1a1a1a"/>
+  <!-- Subtle border -->
+  <rect x="40" y="30" width="1120" height="570" rx="12" fill="#111" stroke="#333" stroke-width="1"/>
+  <!-- Top accent line -->
+  <rect x="40" y="30" width="1120" height="4" rx="2" fill="#8b7355"/>
+  <!-- Star icon -->
+  <g transform="translate(560, 140)">
+    <polygon points="40 0, 51 28, 80 28, 56 46, 65 74, 40 56, 15 74, 24 46, 0 28, 29 28" fill="none" stroke="#8b7355" stroke-width="2.5" opacity="0.8"/>
+  </g>
+  <!-- Horizontal rule -->
+  <line x1="450" y1="250" x2="750" y2="250" stroke="#8b7355" stroke-width="1" opacity="0.5"/>
+  <!-- Title -->
+  <text x="600" y="310" font-family="Georgia, 'Times New Roman', serif" font-size="38" fill="#e0d5c5" font-weight="bold" text-anchor="middle">In Memoriam</text>
+  <!-- Name -->
+  <text x="600" y="370" font-family="Georgia, 'Times New Roman', serif" font-size="48" fill="#fff" font-weight="bold" text-anchor="middle">Chuck Norris</text>
+  <!-- Dates -->
+  <text x="600" y="420" font-family="Georgia, 'Times New Roman', serif" font-size="22" fill="#999" text-anchor="middle">1940 — 2026</text>
+  <!-- Horizontal rule -->
+  <line x1="450" y1="460" x2="750" y2="460" stroke="#8b7355" stroke-width="1" opacity="0.5"/>
+  <!-- Subtitle -->
+  <text x="600" y="510" font-family="Georgia, 'Times New Roman', serif" font-size="18" fill="#777" font-style="italic" text-anchor="middle">The man. The myth. The legend.</text>
+</svg>

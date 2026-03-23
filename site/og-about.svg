@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f8f9fa"/>
+  <!-- Card -->
+  <rect x="60" y="40" width="1080" height="550" rx="12" fill="#fff" stroke="#dee2e6" stroke-width="2"/>
+  <!-- Header bar -->
+  <rect x="60" y="40" width="1080" height="70" rx="12" fill="#1a73e8"/>
+  <rect x="60" y="80" width="1080" height="30" fill="#1a73e8"/>
+  <!-- Lock icon in header -->
+  <g transform="translate(100, 55)" fill="#fff">
+    <rect x="6" y="14" width="16" height="14" rx="2"/>
+    <path d="M8 14V10a6 6 0 0 1 12 0v4" fill="none" stroke="#fff" stroke-width="2.5"/>
+    <circle cx="14" cy="21" r="2"/>
+  </g>
+  <text x="140" y="85" font-family="Arial, sans-serif" font-size="22" fill="#fff" font-weight="bold">W.R.A.A.S. — Secure Document Portal</text>
+  <!-- Info icon -->
+  <g transform="translate(560, 160)">
+    <circle cx="40" cy="40" r="40" fill="#e8f0fe" stroke="#1a73e8" stroke-width="2"/>
+    <text x="40" y="48" font-family="Georgia, serif" font-size="40" fill="#1a73e8" text-anchor="middle" font-style="italic" font-weight="bold">i</text>
+  </g>
+  <!-- Title -->
+  <text x="600" y="300" font-family="Arial, sans-serif" font-size="36" fill="#202124" font-weight="bold" text-anchor="middle">About W.R.A.A.S.</text>
+  <text x="600" y="345" font-family="Arial, sans-serif" font-size="20" fill="#5f6368" text-anchor="middle">Our mission, values, and the team behind the platform</text>
+  <!-- Feature pills -->
+  <g transform="translate(280, 385)">
+    <rect x="0" y="0" width="140" height="36" rx="18" fill="#e8f0fe"/>
+    <text x="70" y="23" font-family="Arial, sans-serif" font-size="13" fill="#1a73e8" text-anchor="middle">Secure Sharing</text>
+    <rect x="160" y="0" width="120" height="36" rx="18" fill="#e8f0fe"/>
+    <text x="220" y="23" font-family="Arial, sans-serif" font-size="13" fill="#1a73e8" text-anchor="middle">Open Source</text>
+    <rect x="300" y="0" width="140" height="36" rx="18" fill="#e8f0fe"/>
+    <text x="370" y="23" font-family="Arial, sans-serif" font-size="13" fill="#1a73e8" text-anchor="middle">Privacy First</text>
+    <rect x="460" y="0" width="160" height="36" rx="18" fill="#e8f0fe"/>
+    <text x="540" y="23" font-family="Arial, sans-serif" font-size="13" fill="#1a73e8" text-anchor="middle">Enterprise Ready</text>
+  </g>
+  <!-- CTA -->
+  <rect x="470" y="460" width="260" height="50" rx="25" fill="#1a73e8"/>
+  <text x="600" y="492" font-family="Arial, sans-serif" font-size="18" fill="#fff" font-weight="bold" text-anchor="middle">Learn More</text>
+</svg>
