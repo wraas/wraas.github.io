@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: taiki-e/install-action@5939f3337e40968c39aa70f5ecb1417a92fb25a0 # v2.75.15
+      - uses: taiki-e/install-action@b6ff580856c41316412a0b9b60540fbc6f8c82cc # v2.86.7
         with:
           tool: just
 
@@ -30,7 +30,7 @@ jobs:
 
       - name: Upload Lighthouse HTML reports
         if: always()
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: lighthouse-reports
           path: /tmp/lighthouse-*.report.html
