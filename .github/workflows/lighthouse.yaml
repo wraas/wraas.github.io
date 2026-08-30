@@ -28,6 +28,14 @@ jobs:
         id: lighthouse
         run: just lighthouse
 
+      - name: Upload Lighthouse HTML reports
+        if: always()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: lighthouse-reports
+          path: /tmp/lighthouse-*.report.html
+          retention-days: 14
+
       - name: Load results for PR comment
         if: always() && github.event_name == 'pull_request'
         run: |
